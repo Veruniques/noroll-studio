@@ -15,11 +15,19 @@ const thumbs = {}; // vimeo id -> thumbnail url
 
 /* ---------------- 3D roll (optional: page works without WebGL) ---------------- */
 let roll = null;
-const rollCards = [
-  ...cinematic.map(w => ({ id: w.id, title: w.title, tags: w.tags, kind: 'cinematic' })),
-  ...design.map(w => ({ id: w.id, title: w.title, tags: w.tags.slice(0, 2), kind: 'design', img: w.cover })),
-  { id: 'studio', title: 'No Roll', tags: ['Studio'], kind: 'design', img: 'assets/img/portrait-1.jpg' },
+// frames printed on the tape: cinematic and design, alternating
+const designFrames = [
+  { id: 'fameplay', title: 'Fameplay', tags: ['Branding', 'Key Visual'], img: 'assets/img/work/x-fameplay-humanoid.jpg' },
+  { id: 'kurnik', title: 'Kurník Šopa', tags: ['Identity'], img: 'assets/img/work/x-kurnik-0.jpg' },
+  { id: 'peaq', title: 'Beyond PEAQ', tags: ['Campaign'], img: 'assets/img/work/x-peaq-22.jpg' },
+  { id: 'fameplay-2', title: 'Fameplay', tags: ['Campaign'], img: 'assets/img/work/x-fameplay-store.jpg' },
+  { id: 'kurnik-2', title: 'Kurník Šopa', tags: ['Illustration'], img: 'assets/img/work/x-kurnik-40.jpg' },
+  { id: 'studio', title: 'No Roll', tags: ['Studio'], img: 'assets/img/portrait-1.jpg' },
 ];
+const rollCards = cinematic.flatMap((w, i) => [
+  { id: w.id, title: w.title, tags: w.tags, kind: 'cinematic' },
+  { ...designFrames[i], kind: 'design' },
+]);
 import('./roll.js')
   .then(({ createRoll }) => {
     roll = createRoll($('#scene'), {
@@ -27,11 +35,38 @@ import('./roll.js')
       onPoints: p => { $('#hud-points').textContent = String(p).padStart(6, '0'); },
       onFps: f => { $('#hud-fps').textContent = String(f).padStart(6, '0'); },
       onOrbit: on => { $('#hud-orbit-label').textContent = on ? 'Orbit On' : 'Orbit Off'; },
+      onRewind: on => { $('#hud-rewind-label').textContent = on ? 'Rewinding…' : 'Rewind'; },
     });
     roll.setMode(document.body.dataset.view);
     Object.entries(thumbs).forEach(([id, url]) => roll.setImage(id, url));
   })
-  .catch(err => console.warn('3D scene unavailable', err));
+  .catch(err => console.warn('3D scene unavailable', err))
+  .finally(() => setTimeout(() => document.body.classList.add('is-loaded'), 500));
+
+/* ---------------- View Works: bar near the bottom, a line otherwise ---------------- */
+const vw = $('.view-works');
+const scramble = (el, text) => {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let f = 0;
+  clearInterval(el._t);
+  el._t = setInterval(() => {
+    f++;
+    el.textContent = text.split('').map((c, i) => (c === ' ' || i < f / 2 ? c : chars[(Math.random() * chars.length) | 0])).join('');
+    if (f / 2 >= text.length) { clearInterval(el._t); el.textContent = text; }
+  }, 30);
+};
+let barOpen = true, barTimer = null;
+function setBar(open) {
+  if (open === barOpen) return;
+  barOpen = open;
+  vw.classList.toggle('is-line', !open);
+  if (open) scramble(vw, 'View Works');
+}
+window.addEventListener('pointermove', e => {
+  setBar(e.clientY > window.innerHeight * 0.78);
+}, { passive: true });
+barTimer = setTimeout(() => { if (barOpen) setBar(false); }, 3200);
+scramble(vw, 'View Works');
 
 /* ---------------- Vimeo thumbnails ---------------- */
 cinematic.forEach(w => {

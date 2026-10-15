@@ -1,8 +1,8 @@
 # noroll-studio
 
 Studio site for NO ROLL studio: AI cinematic production on the left, visual design on the right.
-Layout modelled on laxspace.co — a 3D roll of the work on a grey floor, a works column in the middle,
-the roll "unrolls" into a film strip on the side you open.
+Layout modelled on laxspace.co — a 3D tape roll printed with the work follows the cursor around a grey floor
+and lays the tape down frame by frame. A works column opens in the middle, with a film strip on the side you open.
 
 Plain HTML/CSS/JS (ES modules), no build step. Three.js loads from jsDelivr.
 
@@ -25,7 +25,8 @@ Images go in `assets/img/work/` (JPG, ~1600 px wide).
 
 ## Controls (home)
 
-Drag the roll to spin it, click it for points, `Tab` toggles orbit, `Space` rewinds, `Esc` closes.
+Move the cursor (or drag a finger) and the roll follows it, laying tape. Points = tape laid.
+`Tab` toggles orbit (drag to look around), `Space` rewinds the tape back into the roll, `Esc` closes.
 
 ## Run locally
 

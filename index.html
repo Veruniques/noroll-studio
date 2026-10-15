@@ -21,6 +21,7 @@
   </script>
 </head>
 <body data-view="home">
+  <div class="loader" aria-hidden="true">NO ROLL STUDIO.</div>
   <canvas id="scene" aria-hidden="true"></canvas>
 
   <!-- unrolled film strips, shown beside the works column -->
@@ -38,7 +39,7 @@
     <div><dt>Points</dt><dd id="hud-points">000000</dd></div>
     <div><dt>FPS</dt><dd id="hud-fps">000000</dd></div>
     <div><dt id="hud-orbit-label">Orbit Off</dt><dd><button type="button" data-key="orbit">[Tab]</button></dd></div>
-    <div><dt>Rewind</dt><dd><button type="button" data-key="rewind">[Space]</button></dd></div>
+    <div><dt id="hud-rewind-label">Rewind</dt><dd><button type="button" data-key="rewind">[Space]</button></dd></div>
   </dl>
 
   <button class="now-playing" type="button" data-open-work="rb-cinema" aria-label="Open RB Cinema Spot">
