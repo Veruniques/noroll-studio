@@ -23,10 +23,21 @@ Images go in `assets/img/work/` (JPG, ~1600 px wide).
 - `/?view=cinematic&work=monoprix` — a single work
 - `/?view=design&work=studio` — studio info
 
+## The wolf intro
+
+On the first visit of a browser session (landing on the home view) a wolf runs the roll on a leash
+and writes "Welcome" in tape, then fades out. `Space` or `Esc` skips it. The route is the `WELCOME`
+point list in `assets/js/roll.js`; the model is `assets/models/dog.glb` (any glTF with a `Run`
+animation can replace it).
+
+Model credits: Fox by PixelMannen (CC0), rigging & animation by tomkranis (CC BY 4.0),
+glTF conversion by @AsoboStudio and @scurest (CC BY 4.0), via KhronosGroup/glTF-Sample-Assets.
+Recoloured as a dark wolf.
+
 ## Controls (home)
 
-Move the cursor (or drag a finger) and the roll follows it, laying tape. Points = tape laid.
-`Tab` toggles orbit (drag to look around), `Space` rewinds the tape back into the roll, `Esc` closes.
+Move the cursor (or drag a finger) and the roll follows it, laying tape. Drag to orbit the camera,
+scroll to zoom. `Space` rewinds the tape back into the roll, `Esc` closes a page.
 
 ## Run locally
 

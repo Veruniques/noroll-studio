@@ -28,13 +28,19 @@ const rollCards = cinematic.flatMap((w, i) => [
   { id: w.id, title: w.title, tags: w.tags, kind: 'cinematic' },
   { ...designFrames[i], kind: 'design' },
 ]);
+// the wolf writes "Welcome" once per visit, only when landing on the home view
+let playIntro = false;
+try {
+  playIntro = !sessionStorage.getItem('noroll-welcome')
+    && !new URLSearchParams(location.search).get('view')
+    && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+} catch (e) {}
 import('./roll.js')
   .then(({ createRoll }) => {
     roll = createRoll($('#scene'), {
       cards: rollCards,
-      onPoints: p => { $('#hud-points').textContent = String(p).padStart(6, '0'); },
-      onFps: f => { $('#hud-fps').textContent = String(f).padStart(6, '0'); },
-      onOrbit: on => { $('#hud-orbit-label').textContent = on ? 'Orbit On' : 'Orbit Off'; },
+      intro: playIntro,
+      onIntroEnd: () => { try { sessionStorage.setItem('noroll-welcome', '1'); } catch (e) {} },
       onRewind: on => { $('#hud-rewind-label').textContent = on ? 'Rewinding…' : 'Rewind'; },
     });
     roll.setMode(document.body.dataset.view);
@@ -207,6 +213,7 @@ function renderWork(side, id) {
         </div>`)}
         <img class="work__portrait" src="${esc(w.portrait)}" alt="${esc(STUDIO.director)}, creative director of NO ROLL studio" loading="lazy">
         ${nextBtn}
+        <p class="work__credits">Wolf model: PixelMannen (CC0). Rigging &amp; animation: tomkranis (<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>). glTF: @AsoboStudio &amp; @scurest (CC BY 4.0). Recoloured for NO ROLL.</p>
       </div>`;
   }
   return true;
@@ -268,7 +275,7 @@ document.addEventListener('click', e => {
     go(view, id);
   }
   const key = e.target.closest('[data-key]');
-  if (key && roll) key.dataset.key === 'orbit' ? roll.toggleOrbit() : roll.rewind();
+  if (key && roll) roll.rewind();
 });
 
 $('#back').addEventListener('click', () => go(document.body.dataset.view));
@@ -281,7 +288,7 @@ document.addEventListener('keydown', e => {
   }
   if (view !== 'home' || !roll) return;
   const idle = document.activeElement === document.body || document.activeElement === $('#scene');
-  if (e.key === 'Tab' && idle && !e.shiftKey) { e.preventDefault(); roll.toggleOrbit(); }
+  if ((e.key === ' ' || e.key === 'Escape') && roll.isIntro()) { e.preventDefault(); roll.skipIntro(); return; }
   if (e.key === ' ' && idle) { e.preventDefault(); roll.rewind(); }
 });
 
