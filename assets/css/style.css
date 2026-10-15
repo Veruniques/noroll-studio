@@ -361,7 +361,6 @@ body[data-view="design"] .strip--design { opacity: 1; transform: none; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .chips li { list-style: none; font-size: 12px; letter-spacing: .06em; padding: 5px 11px; border: 1px solid #111; border-radius: 99px; }
 .work__portrait { margin-top: 44px; }
-.work__credits { margin-top: 28px; font-size: 11px; line-height: 1.6; color: #777; }
 .work__contact { display: grid; gap: 2px; margin-top: 8px; }
 .work__contact a {
   display: flex; justify-content: space-between; padding: 14px 18px; background: #111; color: #fff;

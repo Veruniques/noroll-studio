@@ -1,5 +1,5 @@
 /* The roll — a tape printed with the studio's work.
-   On the first visit a wolf runs it on a leash and writes "Welcome" in tape.
+   On the first visit a wolf pushes it along and it writes "Welcome" in tape.
    After that the roll follows the cursor and lays the tape down frame by frame.
    Drag to orbit the camera, [Space] rewinds the tape. */
 import * as THREE from 'three';
@@ -184,24 +184,6 @@ const WORD_W = 7.75, WORD_H = 2.12;
 
 const wrapAngle = a => Math.atan2(Math.sin(a), Math.cos(a));
 
-/* Dark wolf skin with an iridescent rim, fading out on cue */
-function wolfMaterial() {
-  const mat = new THREE.MeshStandardMaterial({ color: 0x151519, roughness: 0.48, metalness: 0.25, flatShading: false, transparent: true });
-  const u = { uTime: { value: 0 }, uFade: { value: 1 } };
-  mat.onBeforeCompile = sh => {
-    Object.assign(sh.uniforms, u);
-    sh.fragmentShader = 'uniform float uTime;\nuniform float uFade;\n' + sh.fragmentShader.replace(
-      '#include <tonemapping_fragment>',
-      `float rim = pow(1.0 - clamp(abs(dot(normal, geometryViewDir)), 0.0, 1.0), 2.6);
-       vec3 iri = 0.5 + 0.5 * cos(6.2831 * (rim * 0.8 + uTime * 0.06 + vec3(0.55, 0.65, 0.8)));
-       gl_FragColor.rgb += iri * rim * (0.42 + (1.0 - uFade) * 1.8);
-       gl_FragColor.a *= uFade;
-       #include <tonemapping_fragment>`
-    );
-  };
-  return { mat, u };
-}
-
 export function createRoll(canvas, { cards, onPoints, onFps, onRewind, onIntroEnd, intro = false }) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -301,28 +283,6 @@ export function createRoll(canvas, { cards, onPoints, onFps, onRewind, onIntroEn
   root.renderOrder = 3;
   scene.add(root);
 
-  // ---- leash: a yoke on the roll's axle + a strip of film to the wolf's collar ----
-  const leashMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.6, transparent: true });
-  const yoke = new THREE.Group();
-  const YOKE_TIP = new THREE.Vector3(0, 0.5, R + 1.1);
-  [1, -1].forEach(s => {
-    const a = new THREE.Vector3(s * (W / 2 + 0.12), 0, 0);
-    const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, a.distanceTo(YOKE_TIP), 8), leashMat);
-    rod.position.copy(a).add(YOKE_TIP).multiplyScalar(0.5);
-    rod.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), YOKE_TIP.clone().sub(a).normalize());
-    rod.castShadow = true;
-    yoke.add(rod);
-    const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.08, 16), leashMat);
-    cap.rotation.z = Math.PI / 2; cap.position.copy(a);
-    yoke.add(cap);
-  });
-  yoke.visible = false;
-  root.add(yoke);
-  const strip = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.025, 1), new THREE.MeshStandardMaterial({ color: 0x141414, roughness: 0.5, transparent: true }));
-  strip.castShadow = true;
-  strip.visible = false;
-  scene.add(strip);
-
   // ---- state ----
   const p = new THREE.Vector2(0, 0);
   let heading = -2.5;                      // radians, 0 = +z (toward camera)
@@ -367,7 +327,7 @@ export function createRoll(canvas, { cards, onPoints, onFps, onRewind, onIntroEn
     false, 'centripetal'
   );
   const routeLen = route.getLength();
-  const LEASH = 7;                       // roll centre → wolf hips along the route
+  const PUSH = R + 2.6;                  // roll centre → wolf centre, the wolf runs behind
 
   // intro state: 'wait' (model loading) → 'run' → 'exit' (wolf leaves) → null
   let introState = intro ? 'wait' : null;
@@ -381,37 +341,41 @@ export function createRoll(canvas, { cards, onPoints, onFps, onRewind, onIntroEn
   }
   resetTape();
 
-  // ---- the wolf ----
-  let wolf = null, mixer = null, wolfSkin = null, neck = null;
+  // ---- the wolf: a keyed video run cycle on a camera-facing card ----
+  // sprite sheet: 4×4 grid, 14 frames of 580×430, wolf facing left, feet on the bottom edge
+  const WOLF_FRAMES = 14, WOLF_COLS = 4, WOLF_ROWS = 4, WOLF_FPS = 30;
+  const WOLF_H = 4.4, WOLF_W = WOLF_H * 580 / 430;
+  let wolf = null, wolfMat = null, wolfShadow = null, wolfFrame = 0, wolfFlip = 1, wolfHeading = heading;
   if (introState) {
-    import('three/addons/loaders/GLTFLoader.js').then(({ GLTFLoader }) => {
-      new GLTFLoader().load(new URL('../models/dog.glb', import.meta.url).href, gltf => {
-        wolf = gltf.scene;
-        const skin = wolfMaterial();
-        wolfSkin = skin;
-        wolf.traverse(o => {
-          if (o.isMesh) {
-            if (!o.geometry.attributes.normal) o.geometry.computeVertexNormals(); // the model ships without normals
-            o.material = skin.mat; o.castShadow = true; o.frustumCulled = false;
-          }
-          if (o.isBone && /Neck/.test(o.name)) neck = o;
-          if (o.isBone && /Tail01/.test(o.name)) o.scale.setScalar(0.82); // a wolf, not a fox
-        });
-        wolf.scale.setScalar(0.05);
-        scene.add(wolf);
-        mixer = new THREE.AnimationMixer(wolf);
-        const run = gltf.animations.find(a => a.name === 'Run') || gltf.animations[0];
-        mixer.clipAction(run).setEffectiveTimeScale(1.25).play();
-        yoke.visible = strip.visible = true;
-        introState = 'run';
-      }, undefined, () => endIntro());
-    }).catch(() => endIntro());
+    new THREE.TextureLoader().load(new URL('../img/wolf-run.webp', import.meta.url).href, tex => {
+      tex.colorSpace = THREE.SRGBColorSpace;
+      tex.repeat.set(1 / WOLF_COLS, 1 / WOLF_ROWS);
+      tex.anisotropy = 4;
+      wolfMat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, side: THREE.DoubleSide });
+      const g = new THREE.PlaneGeometry(WOLF_W, WOLF_H);
+      g.translate(0, WOLF_H / 2 - 0.08, 0);
+      wolf = new THREE.Mesh(g, wolfMat);
+      wolf.renderOrder = 5;
+      scene.add(wolf);
+      // soft contact shadow
+      const c = document.createElement('canvas'); c.width = c.height = 128;
+      const x = c.getContext('2d'), gr = x.createRadialGradient(64, 64, 4, 64, 64, 62);
+      gr.addColorStop(0, 'rgba(0,0,0,.32)'); gr.addColorStop(1, 'rgba(0,0,0,0)');
+      x.fillStyle = gr; x.fillRect(0, 0, 128, 128);
+      wolfShadow = new THREE.Mesh(new THREE.PlaneGeometry(1, 1),
+        new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(c), transparent: true, depthWrite: false }));
+      wolfShadow.rotation.x = -Math.PI / 2;
+      wolfShadow.scale.set(WOLF_W * 0.8, WOLF_H * 0.45, 1);
+      wolfShadow.position.y = 0.02;
+      wolfShadow.renderOrder = 4;
+      scene.add(wolfShadow);
+      introState = 'run';
+    }, undefined, () => endIntro());
   }
 
   function endIntro() {
     introState = null;
-    if (wolf) { scene.remove(wolf); wolf = null; }
-    yoke.visible = strip.visible = false;
+    if (wolf) { scene.remove(wolf, wolfShadow); wolf = null; }
     controls.target.copy(look);
     controls.enabled = true;
     onIntroEnd && onIntroEnd();
@@ -441,6 +405,7 @@ export function createRoll(canvas, { cards, onPoints, onFps, onRewind, onIntroEn
   }
   // point on the route (or past its end) for the wolf
   const wolfAt = (d, out) => {
+    if (d < 0) return out.copy(route.getPointAt(0)).addScaledVector(route.getTangentAt(0), d);
     if (d <= routeLen) return out.copy(route.getPointAt(d / routeLen));
     const end = route.getPointAt(1), tg = route.getTangentAt(1);
     return out.copy(end).addScaledVector(tg, d - routeLen);
@@ -516,8 +481,9 @@ export function createRoll(canvas, { cards, onPoints, onFps, onRewind, onIntroEn
       if (introD >= routeLen - 1e-4) beginExit();
     } else if (introState === 'exit') {
       exitT += dtMs / 1000;
-      if (wolfSkin) wolfSkin.u.uFade.value = Math.max(0, 1 - exitT / 1.1);
-      leashMat.opacity = strip.material.opacity = Math.max(0, 1 - exitT / 0.6);
+      const f = Math.max(0, 1 - exitT / 1.0);
+      if (wolfMat) wolfMat.opacity = f;
+      if (wolfShadow) wolfShadow.material.opacity = f;
       if (exitT > 1.2) { endIntro(); settle = 1; }
     } else if (rewinding) {
       const k = Math.max(1, Math.round(Math.min(40, 2 + n * 0.02) * dt));
@@ -555,29 +521,32 @@ export function createRoll(canvas, { cards, onPoints, onFps, onRewind, onIntroEn
     tilt += (THREE.MathUtils.clamp(-turn * 6, -0.35, 0.35) - tilt) * 0.12 * dt;
     root.rotation.z = tilt;
 
-    // the wolf runs ahead on the route; leash from the yoke tip to its collar
+    // the wolf runs behind the roll, pushing it along the route
     if (wolf) {
-      mixer.update(dtMs / 1000);
-      if (wolfSkin) wolfSkin.u.uTime.value = now / 1000;
-      if (introState === 'run' || introState === 'wait') {
-        const d = introD + LEASH;
-        wolfAt(d, v3); wolfAt(d + 0.6, v3b);
+      if (introState === 'run') {
+        // pushing: always right behind the roll, turning with it (smoothed)
+        wolfHeading += wrapAngle(heading - wolfHeading) * Math.min(1, 0.18 * dt);
+        const fx = Math.sin(wolfHeading), fz = Math.cos(wolfHeading);
+        v3.set(p.x - fx * PUSH, 0, p.y - fz * PUSH);
+        v3b.set(v3.x + fx, 0, v3.z + fz);
+        wolf.position.copy(v3);
+        // play the run cycle at the pace of the roll
+        wolfFrame += (dtMs / 1000) * WOLF_FPS * Math.max(0.35, introSpeed / 0.34);
       } else {
-        wolf.position.addScaledVector(exitDir, 0.34 * dt * 1.15);
+        // exit: slow to a stop where it stands, then fade
+        wolfFrame += (dtMs / 1000) * WOLF_FPS * Math.max(0, 1 - exitT * 1.2);
         v3.copy(wolf.position); v3b.copy(v3).add(exitDir);
       }
-      wolf.position.set(v3.x, 0, v3.z);
-      wolf.rotation.y = Math.atan2(v3b.x - v3.x, v3b.z - v3.z);
-      if (introState === 'run') wolf.position.y = 0;
-      // leash
-      root.updateMatrixWorld();
-      const a = yoke.localToWorld(YOKE_TIP.clone());
-      const b = new THREE.Vector3();
-      if (neck) neck.getWorldPosition(b); else b.copy(wolf.position).setY(2);
-      b.y -= 0.3;
-      strip.position.copy(a).add(b).multiplyScalar(0.5);
-      strip.scale.z = a.distanceTo(b);
-      strip.lookAt(b);
+      const fr = Math.floor(wolfFrame) % WOLF_FRAMES;
+      wolfMat.map.offset.set((fr % WOLF_COLS) / WOLF_COLS, 1 - (Math.floor(fr / WOLF_COLS) + 1) / WOLF_ROWS);
+      // face the camera (around Y only), mirrored to match the direction on screen
+      wolf.rotation.y = Math.atan2(camera.position.x - wolf.position.x, camera.position.z - wolf.position.z);
+      const sa = v3.clone().project(camera), sb = v3b.clone().project(camera);
+      const dir = sb.x - sa.x;
+      if (Math.abs(dir) > 0.002) wolfFlip = dir > 0 ? -1 : 1; // sprite faces left
+      wolf.scale.x += (wolfFlip - wolf.scale.x) * Math.min(1, 0.35 * dt);
+      wolfShadow.position.set(wolf.position.x, 0.02, wolf.position.z);
+      wolfShadow.rotation.z = -wolf.rotation.y;
     }
 
     sun.position.set(p.x + SUN_OFF.x, SUN_OFF.y, p.y + SUN_OFF.z);

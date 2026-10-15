@@ -213,7 +213,6 @@ function renderWork(side, id) {
         </div>`)}
         <img class="work__portrait" src="${esc(w.portrait)}" alt="${esc(STUDIO.director)}, creative director of NO ROLL studio" loading="lazy">
         ${nextBtn}
-        <p class="work__credits">Wolf model: PixelMannen (CC0). Rigging &amp; animation: tomkranis (<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>). glTF: @AsoboStudio &amp; @scurest (CC BY 4.0). Recoloured for NO ROLL.</p>
       </div>`;
   }
   return true;

@@ -25,14 +25,13 @@ Images go in `assets/img/work/` (JPG, ~1600 px wide).
 
 ## The wolf intro
 
-On the first visit of a browser session (landing on the home view) a wolf runs the roll on a leash
-and writes "Welcome" in tape, then fades out. `Space` or `Esc` skips it. The route is the `WELCOME`
-point list in `assets/js/roll.js`; the model is `assets/models/dog.glb` (any glTF with a `Run`
-animation can replace it).
+On the first visit of a browser session (landing on the home view) a wolf pushes the roll along and
+the tape writes "Welcome", then the wolf fades out. `Space` or `Esc` skips it. The route is the
+`WELCOME` point list in `assets/js/roll.js`.
 
-Model credits: Fox by PixelMannen (CC0), rigging & animation by tomkranis (CC BY 4.0),
-glTF conversion by @AsoboStudio and @scurest (CC BY 4.0), via KhronosGroup/glTF-Sample-Assets.
-Recoloured as a dark wolf.
+The wolf is a 14-frame run cycle keyed out of the stock clip "realistic 3D animation of a wolf
+running on black" into `assets/img/wolf-run.webp` (4×4 grid of 580×430 frames, facing left),
+shown on a camera-facing card and mirrored to match the direction it runs.
 
 ## Controls (home)
 
