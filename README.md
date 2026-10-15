@@ -26,8 +26,9 @@ Images go in `assets/img/work/` (JPG, ~1600 px wide).
 ## The wolf intro
 
 On the first visit of a browser session (landing on the home view) a wolf pushes the roll along and
-the tape writes "Welcome", then the wolf fades out. `Space` or `Esc` skips it. The route is the
-`WELCOME` point list in `assets/js/roll.js`.
+the tape writes "HI", then the wolf fades out. `Space` or `Esc` skips it. The route is the
+`ROUTE` point list in `assets/js/roll.js`: `[x, y, draw]`, where `draw = 0` moves the roll between
+strokes without laying tape. Pace: `INTRO_PACE`.
 
 The wolf is a 14-frame run cycle keyed out of the stock clip "realistic 3D animation of a wolf
 running on black" into `assets/img/wolf-run.webp` (4×4 grid of 580×430 frames, facing left),

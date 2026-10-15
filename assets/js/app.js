@@ -28,7 +28,7 @@ const rollCards = cinematic.flatMap((w, i) => [
   { id: w.id, title: w.title, tags: w.tags, kind: 'cinematic' },
   { ...designFrames[i], kind: 'design' },
 ]);
-// the wolf writes "Welcome" once per visit, only when landing on the home view
+// the wolf writes "HI" once per visit, only when landing on the home view
 let playIntro = false;
 try {
   playIntro = !sessionStorage.getItem('noroll-welcome')

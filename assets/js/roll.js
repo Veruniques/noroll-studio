@@ -1,5 +1,5 @@
 /* The roll — a tape printed with the studio's work.
-   On the first visit a wolf pushes it along and it writes "Welcome" in tape.
+   On the first visit a wolf pushes it along and it writes "HI" in tape.
    After that the roll follows the cursor and lays the tape down frame by frame.
    Drag to orbit the camera, [Space] rewinds the tape. */
 import * as THREE from 'three';
@@ -170,17 +170,22 @@ function makeFloor() {
   return tex;
 }
 
-/* ---- "Welcome", one cursive stroke (glyph units: x right, y up, x-height 1) ---- */
-const WELCOME = [
-  [0, 2], [0.38, 0], [0.72, 1.25], [1.06, 0], [1.44, 2.0],          // W
-  [1.62, 0.55], [2.25, 0.72], [2.18, 1.1], [1.86, 1.12], [1.66, 0.62], [1.88, 0.02], [2.45, 0.12], // e
-  [2.95, 1.15], [3.02, 2.02], [2.74, 2.12], [2.6, 1.62], [2.68, 0.4], [2.95, 0.0], [3.35, 0.22],   // l
-  [3.8, 0.88], [3.55, 1.06], [3.28, 0.62], [3.45, 0.04], [3.98, 0.18],                            // c
-  [4.3, 0.92], [4.66, 0.98], [4.82, 0.5], [4.6, 0.0], [4.28, 0.18], [4.34, 0.74], [4.72, 0.98], [5.12, 0.86], // o
-  [5.26, 0.02], [5.5, 0.92], [5.78, 0.96], [5.88, 0.02], [6.1, 0.92], [6.38, 0.96], [6.48, 0.02], [6.8, 0.22], // m
-  [7.42, 0.62], [7.36, 1.04], [7.04, 1.06], [6.84, 0.58], [7.06, 0.03], [7.75, 0.16],              // e
+/* ---- "HI" (glyph units: x right, y up, cap height 2).
+   [x, y, draw]: draw = 1 lays tape from this point to the next, 0 is a "pen-up" move where
+   the roll travels between strokes without leaving tape. Four strokes: H left stem, crossbar,
+   H right stem, I. The moves between them curve so the wolf never turns sharply. ---- */
+const ROUTE = [
+  [0.00, 2.05, 1], [0.00, 1.40, 1], [0.00, 0.70, 1], [0.00, 0.00, 0],          // H left stem, down
+  [-0.30, 0.25, 0], [-0.30, 0.80, 0], [-0.10, 1.00, 1],                         // swing back up
+  [0.40, 1.00, 1], [0.80, 1.00, 1], [1.30, 1.00, 0],                            // crossbar
+  [1.62, 1.28, 0], [1.62, 2.22, 0], [1.40, 2.42, 0], [1.20, 2.05, 1],          // loop up over the top
+  [1.20, 1.40, 1], [1.20, 0.70, 1], [1.20, 0.00, 0],                            // H right stem, down
+  [1.42, -0.32, 0], [1.80, -0.20, 0], [1.92, 0.60, 0], [1.86, 1.80, 0],
+  [1.96, 2.40, 0], [2.10, 2.32, 0], [2.15, 2.05, 1],                            // over to the top of the I
+  [2.15, 1.40, 1], [2.15, 0.70, 1], [2.15, 0.00, 0],                            // I, down
+  [2.30, -0.30, 0], [2.62, -0.06, 0], [2.80, 0.50, 0], [2.86, 0.95, 0],          // glide clear of the word
 ];
-const WORD_W = 7.75, WORD_H = 2.12;
+const WORD_W = 2.15, WORD_H = 2.05;   // the word itself (the exit glide sits outside it)
 
 const wrapAngle = a => Math.atan2(Math.sin(a), Math.cos(a));
 
@@ -197,12 +202,12 @@ export function createRoll(canvas, { cards, onPoints, onFps, onRewind, onIntroEn
   // camera looks down at the floor from the front; distance adapts to the screen
   const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 500);
   const CAM_DIR = new THREE.Vector3(0, 22, 20).normalize();
-  const WORD_CENTER = new THREE.Vector3(0, 0, -1.2);
+  const WORD_CENTER = new THREE.Vector3(-0.4, 0, -0.8);
   const look = WORD_CENTER.clone();
-  let homeDist = 30, wordDist = 30;
+  let homeDist = 30, wordDist = 30, placed = false;
 
   const controls = new OrbitControls(camera, canvas);
-  controls.enabled = false;           // switched on after the intro
+  controls.enabled = true;            // orbit is always on: drag to look around, scroll to zoom
   controls.enableDamping = true;
   controls.enablePan = false;
   controls.minDistance = 12; controls.maxDistance = 90;
@@ -295,8 +300,9 @@ export function createRoll(canvas, { cards, onPoints, onFps, onRewind, onIntroEn
   function writeSample(i, sm) {
     const nx = Math.cos(sm.h), nz = -Math.sin(sm.h);
     const o = i * 6;
-    pos[o] = sm.x - nx * W / 2; pos[o + 1] = 0.004; pos[o + 2] = sm.z - nz * W / 2;
-    pos[o + 3] = sm.x + nx * W / 2; pos[o + 4] = 0.004; pos[o + 5] = sm.z + nz * W / 2;
+    const hw = (sm.w ?? W) / 2;                        // w = 0 marks a break between strokes
+    pos[o] = sm.x - nx * hw; pos[o + 1] = 0.004; pos[o + 2] = sm.z - nz * hw;
+    pos[o + 3] = sm.x + nx * hw; pos[o + 4] = 0.004; pos[o + 5] = sm.z + nz * hw;
     const u = i * 4, s = -sm.s / CIRC;
     uv[u] = s; uv[u + 1] = 1; uv[u + 2] = s; uv[u + 3] = 0;
   }
@@ -313,25 +319,35 @@ export function createRoll(canvas, { cards, onPoints, onFps, onRewind, onIntroEn
       n -= drop;
       samples.forEach((sm, i) => writeSample(i, sm));
     }
-    const sm = { x: p.x, z: p.y, h: heading, s: laid };
+    const sm = { x: p.x, z: p.y, h: heading, s: laid, w: arguments[0] ?? W };
     samples.push(sm);
     writeSample(n, sm);
     n++;
   }
   function resetTape() { samples.length = 0; n = 0; laid = 0; acc = 0; push(); flush(); }
 
-  // ---- the "Welcome" route ----
-  const S = 4.1;
+  // ---- the "HI" route ----
+  const S = 5.4;
   const route = new THREE.CatmullRomCurve3(
-    WELCOME.map(([x, y]) => new THREE.Vector3((x - WORD_W / 2) * S + WORD_CENTER.x, 0, -(y - WORD_H / 2) * S + WORD_CENTER.z)),
+    ROUTE.map(([x, y]) => new THREE.Vector3((x - WORD_W / 2) * S + WORD_CENTER.x, 0, -(y - WORD_H / 2) * S + WORD_CENTER.z)),
     false, 'centripetal'
   );
   const routeLen = route.getLength();
+  // arc-length ranges where tape is laid
+  const penRanges = (() => {
+    const L = route.getLengths(4000), N = ROUTE.length - 1, out = [];
+    const at = k => L[Math.round((k / N) * 4000)];
+    ROUTE.forEach((pt, k) => { if (k < N && pt[2]) out.push([at(k), at(k + 1)]); });
+    return out;
+  })();
+  const penDown = d => penRanges.some(([a, b]) => d >= a - 1e-6 && d <= b + 1e-6);
+  let wasDown = true;
   const PUSH = R + 2.6;                  // roll centre → wolf centre, the wolf runs behind
 
   // intro state: 'wait' (model loading) → 'run' → 'exit' (wolf leaves) → null
   let introState = intro ? 'wait' : null;
   let introD = 0, introSpeed = 0, exitT = 0;
+  const INTRO_PACE = 0.13;               // floor units per frame (~8 per second)
   const exitDir = new THREE.Vector3();
 
   if (introState) {
@@ -348,6 +364,7 @@ export function createRoll(canvas, { cards, onPoints, onFps, onRewind, onIntroEn
   let wolf = null, wolfMat = null, wolfShadow = null, wolfFrame = 0, wolfFlip = 1, wolfHeading = heading;
   if (introState) {
     new THREE.TextureLoader().load(new URL('../img/wolf-run.webp', import.meta.url).href, tex => {
+      if (introState !== 'wait') return;              // skipped while loading
       tex.colorSpace = THREE.SRGBColorSpace;
       tex.repeat.set(1 / WOLF_COLS, 1 / WOLF_ROWS);
       tex.anisotropy = 4;
@@ -395,6 +412,12 @@ export function createRoll(canvas, { cards, onPoints, onFps, onRewind, onIntroEn
     p.set(q.x, q.z);
     heading = Math.atan2(tg.x, tg.z);
     laid += dd; acc += dd;
+    const down = penDown(introD);
+    if (down !== wasDown) {                         // zero-width samples = a clean cut in the tape
+      if (down) { push(0); push(); } else { push(); push(0); }
+      acc = 0; wasDown = down;
+    }
+    if (!down) { acc = 0; return; }
     while (acc >= DS) { acc -= DS; push(); }
   }
   function beginExit() {
@@ -446,16 +469,21 @@ export function createRoll(canvas, { cards, onPoints, onFps, onRewind, onIntroEn
     const hHalf = Math.atan(Math.tan(vHalf) * camera.aspect);
     return (width / 2) / Math.tan(hHalf) * 1.18;
   }
+  function fitHeight(depth) {
+    // the floor is seen at an angle, so its depth shrinks on screen by the camera's elevation
+    const vHalf = THREE.MathUtils.degToRad(camera.fov / 2);
+    return (depth * CAM_DIR.y / 2) / Math.tan(vHalf) * 1.25;
+  }
   function resize() {
     const w = window.innerWidth, h = window.innerHeight;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.fov = w / h < 0.8 ? 48 : w / h < 1.2 ? 38 : 30;
     camera.updateProjectionMatrix();
-    wordDist = Math.max(30, fitDist(WORD_W * S + 4));
+    wordDist = Math.max(30, fitDist(WORD_W * S + (w / h < 0.8 ? 3 : 10)), fitHeight(WORD_H * S + 6));
     // after the welcome the word stays in frame; on a plain visit the roll gets closer
     homeDist = w / h < 0.8 ? Math.max(30, fitDist(16)) : intro ? wordDist : 32;
-    if (!controls.enabled) camera.position.copy(look).addScaledVector(CAM_DIR, introState ? wordDist : homeDist);
+    if (!placed) { camera.position.copy(look).addScaledVector(CAM_DIR, introState ? wordDist : homeDist); placed = true; }
     camera.lookAt(look);
   }
   window.addEventListener('resize', resize);
@@ -473,7 +501,12 @@ export function createRoll(canvas, { cards, onPoints, onFps, onRewind, onIntroEn
 
     let turn = 0;
     if (introState === 'run') {
-      introSpeed = Math.min(0.34, introSpeed + 0.012 * dt);
+      // calm pace: ease in, slow down into the curves, glide to a stop at the end
+      const t0 = introD / routeLen, t1 = Math.min(1, (introD + 3) / routeLen);
+      const bend = route.getTangentAt(t0).angleTo(route.getTangentAt(t1));      // radians over the next 3 units
+      const left = routeLen - introD;
+      const want = INTRO_PACE * (1 - Math.min(0.55, bend * 0.45)) * Math.min(1, 0.25 + left / 9);
+      introSpeed += (want - introSpeed) * Math.min(1, 0.03 * dt);
       const before = heading;
       stepRoute(Math.min(introSpeed * dt, routeLen - introD));
       turn = wrapAngle(heading - before);
@@ -525,13 +558,13 @@ export function createRoll(canvas, { cards, onPoints, onFps, onRewind, onIntroEn
     if (wolf) {
       if (introState === 'run') {
         // pushing: always right behind the roll, turning with it (smoothed)
-        wolfHeading += wrapAngle(heading - wolfHeading) * Math.min(1, 0.18 * dt);
+        wolfHeading += wrapAngle(heading - wolfHeading) * Math.min(1, 0.09 * dt);
         const fx = Math.sin(wolfHeading), fz = Math.cos(wolfHeading);
         v3.set(p.x - fx * PUSH, 0, p.y - fz * PUSH);
         v3b.set(v3.x + fx, 0, v3.z + fz);
         wolf.position.copy(v3);
         // play the run cycle at the pace of the roll
-        wolfFrame += (dtMs / 1000) * WOLF_FPS * Math.max(0.35, introSpeed / 0.34);
+        wolfFrame += (dtMs / 1000) * WOLF_FPS * THREE.MathUtils.clamp(introSpeed / 0.2, 0.3, 1);
       } else {
         // exit: slow to a stop where it stands, then fade
         wolfFrame += (dtMs / 1000) * WOLF_FPS * Math.max(0, 1 - exitT * 1.2);
@@ -552,12 +585,7 @@ export function createRoll(canvas, { cards, onPoints, onFps, onRewind, onIntroEn
     sun.position.set(p.x + SUN_OFF.x, SUN_OFF.y, p.y + SUN_OFF.z);
     sun.target.position.set(p.x, 0, p.y);
 
-    if (controls.enabled) controls.update();
-    else {
-      v3.copy(look).addScaledVector(CAM_DIR, introState ? wordDist : homeDist);
-      camera.position.lerp(v3, 0.05 * dt);
-      camera.lookAt(look);
-    }
+    controls.update();
     if (settle) {
       // on narrow screens, glide in toward the roll after the welcome
       if (homeDist !== wordDist) {
