@@ -1,4 +1,5 @@
 import { STUDIO, cinematic, design, info } from './data.js';
+import { runDogOnto, extinguish } from './fire.js';
 
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
@@ -28,19 +29,10 @@ const rollCards = cinematic.flatMap((w, i) => [
   { id: w.id, title: w.title, tags: w.tags, kind: 'cinematic' },
   { ...designFrames[i], kind: 'design' },
 ]);
-// the wolf writes "HI" once per visit, only when landing on the home view
-let playIntro = false;
-try {
-  playIntro = !sessionStorage.getItem('noroll-welcome')
-    && !new URLSearchParams(location.search).get('view')
-    && !matchMedia('(prefers-reduced-motion: reduce)').matches;
-} catch (e) {}
 import('./roll.js')
   .then(({ createRoll }) => {
     roll = createRoll($('#scene'), {
       cards: rollCards,
-      intro: playIntro,
-      onIntroEnd: () => { try { sessionStorage.setItem('noroll-welcome', '1'); } catch (e) {} },
       onRewind: on => { $('#hud-rewind-label').textContent = on ? 'Rewinding…' : 'Rewind'; },
     });
     roll.setMode(document.body.dataset.view);
@@ -227,6 +219,7 @@ function readURL() {
 
 function apply({ view, work: id }, { fromNav } = {}) {
   document.body.dataset.view = view;
+  if (view !== 'cinematic') extinguish();          // the fire only burns while you're in Cinematic
   roll && roll.setMode(view);
   if (view === 'home') {
     col.classList.remove('is-open', 'is-detail');
@@ -261,6 +254,11 @@ document.addEventListener('click', e => {
   const nav = e.target.closest('[data-nav]');
   if (nav) {
     e.preventDefault();
+    // the Cinematic title: the fire dog runs in, leaps onto it and sets it alight, then we go
+    if (nav.matches('.side-label--left') && document.body.dataset.view === 'home') {
+      runDogOnto(nav.querySelector('.side-label__text') || nav).then(ran => { if (ran) go('cinematic'); });
+      return;
+    }
     go(nav.dataset.nav);
     return;
   }
@@ -287,7 +285,6 @@ document.addEventListener('keydown', e => {
   }
   if (view !== 'home' || !roll) return;
   const idle = document.activeElement === document.body || document.activeElement === $('#scene');
-  if ((e.key === ' ' || e.key === 'Escape') && roll.isIntro()) { e.preventDefault(); roll.skipIntro(); return; }
   if (e.key === ' ' && idle) { e.preventDefault(); roll.rewind(); }
 });
 
