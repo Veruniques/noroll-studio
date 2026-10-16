@@ -53,6 +53,9 @@ assets/img/og.jpg       social share image
 
 - `STUDIO` — name, tagline, email, LinkedIn, director.
 - `cinematic[]` — the 6 Vimeo spots: `id`, `title`, `client`, `tags`, `vimeo` (video ID), `text`.
+  All six spread `...CVC`, which adds "Produced for: Czech Video Center (Fameplay)" and the rights notice
+  "Produced for Czech Video Center (Fameplay) as a freelancer. All rights belong to Czech Video Center a.s."
+  on the work page. Remove `...CVC` from an item for work that is fully NO ROLL's.
   Currently: RB Cinema Spot, Monoprix, Fameplay Voice, Kofola Remake, RB Hybrid, PPAS.
 - `design[]` — visual work: `id`, `title`, `client`, `tags`, `cover`, `text`, `images[]` (stacked full-width on the detail page).
   Currently: Fameplay, Kurník Šopa, Beyond PEAQ.
@@ -132,6 +135,7 @@ Open http://localhost:8000. It needs internet for Three.js, Google Fonts and Vim
 
 ## Rights / credits to keep in mind
 
-- Design visuals and cinematic work: Veru / NO ROLL clients.
+- Cinematic spots: made by Veru as a freelancer for Czech Video Center (Fameplay); **all rights belong to Czech Video Center a.s.** The notice is shown on each work page.
+- Design visuals: Veru / NO ROLL clients.
 - Fire dog image: supplied by Veru (AI-generated).
 - No third-party 3D models are in use any more. The fox model and wolf stock clip were removed with the intro.

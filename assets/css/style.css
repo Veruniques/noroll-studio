@@ -380,6 +380,7 @@ body[data-view="design"] .strip--design { opacity: 1; transform: none; }
 .work__body { padding: 56px 9% 40px; }
 .work__kicker { font-size: 12px; letter-spacing: .32em; text-transform: uppercase; margin-bottom: 12px; color: #333; }
 .work__title { font-size: clamp(30px, 3.4vw, 48px); font-weight: 300; letter-spacing: .14em; text-transform: uppercase; line-height: 1.12; }
+.work__rights { margin-top: 28px; padding-top: 14px; border-top: 1px solid rgba(0,0,0,.15); font-size: 12px; line-height: 1.6; color: #666; max-width: 60ch; }
 .work__meta { display: flex; flex-wrap: wrap; gap: 6px 22px; margin-top: 18px; font-size: 12px; letter-spacing: .08em; color: #555; }
 .work__meta b { font-weight: 600; color: var(--ink); margin-right: 6px; }
 .work__h { display: flex; align-items: center; gap: 10px; font-size: 17px; margin: 44px 0 14px; }

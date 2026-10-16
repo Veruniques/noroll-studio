@@ -13,6 +13,12 @@ export const STUDIO = {
   director: 'Veronika Dominiková',
 };
 
+// Work made as a freelancer under Czech Video Center (Fameplay): credit + rights notice on the work page
+const CVC = {
+  producedFor: 'Czech Video Center (Fameplay)',
+  rights: 'Produced for Czech Video Center (Fameplay) as a freelancer. All rights belong to Czech Video Center a.s.',
+};
+
 export const cinematic = [
   {
     id: 'rb-cinema',
@@ -20,6 +26,7 @@ export const cinematic = [
     client: 'RB',
     tags: ['AI Production', 'Cinema'],
     vimeo: '1193051888',
+    ...CVC,
     text: 'An AI-generated sponsor spot built for the big screen. Written, art-directed and generated end to end, then graded for cinema projection.',
   },
   {
@@ -28,6 +35,7 @@ export const cinematic = [
     client: 'Monoprix',
     tags: ['AI Production', 'YT Commercial'],
     vimeo: '1193051592',
+    ...CVC,
     text: 'A YouTube pre-roll for Monoprix. Short, punchy, made to survive the skip button.',
   },
   {
@@ -36,6 +44,7 @@ export const cinematic = [
     client: 'Fameplay',
     tags: ['AI Production', 'Voice'],
     vimeo: '1193052091',
+    ...CVC,
     text: 'A voice-led AI commercial for Fameplay, the home of the Emmy-winning #marty_is_dead.',
   },
   {
@@ -44,6 +53,7 @@ export const cinematic = [
     client: 'Kofola, asked by the original creator',
     tags: ['AI Production', 'Remake'],
     vimeo: '1193051595',
+    ...CVC,
     text: 'The original creator of an iconic Kofola commercial asked for an AI remake. Same soul, new pipeline.',
   },
   {
@@ -52,6 +62,7 @@ export const cinematic = [
     client: 'RB',
     tags: ['Hybrid', 'Live Action + AI'],
     vimeo: '1193051591',
+    ...CVC,
     text: 'Live-action footage meets generated worlds. A hybrid production where you stop asking which shot is real.',
   },
   {
@@ -60,6 +71,7 @@ export const cinematic = [
     client: 'PPAS',
     tags: ['AI Production', 'TV Commercial'],
     vimeo: '1193053922',
+    ...CVC,
     text: 'A broadcast TV spot produced with AI, built to air next to traditionally shot ads and hold its own.',
   },
 ];
