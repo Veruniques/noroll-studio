@@ -141,3 +141,9 @@ Open http://localhost:8000. It needs internet for Three.js, Google Fonts and Vim
 - Design visuals: Veru / NO ROLL clients.
 - Fire dog image: supplied by Veru (AI-generated).
 - No third-party 3D models are in use any more. The fox model and wolf stock clip were removed with the intro.
+
+
+## 2026-10-20 — positioning: personal name, NO ROLL as the method
+- Site now leads with Veronika Dominiková as AI film & campaign director; NO ROLL is the method/label, not a studio ("I", not "we").
+- Right side label on the home screen is **About** (opens the About me page, id `studio`). Design is no longer in the navigation; its data and `?view=design` route still exist.
+- About me services narrowed to film and campaign work (no identity, no web).

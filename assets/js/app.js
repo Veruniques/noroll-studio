@@ -23,7 +23,7 @@ const designFrames = [
   { id: 'peaq', title: 'Beyond PEAQ', tags: ['Campaign'], img: 'assets/img/work/x-peaq-22.jpg' },
   { id: 'fameplay-2', title: 'Fameplay', tags: ['Campaign'], img: 'assets/img/work/x-fameplay-store.jpg' },
   { id: 'kurnik-2', title: 'Kurník Šopa', tags: ['Illustration'], img: 'assets/img/work/x-kurnik-40.jpg' },
-  { id: 'studio', title: 'No Roll', tags: ['Studio'], img: 'assets/img/portrait-1.jpg' },
+  { id: 'studio', title: 'About', tags: ['Director'], img: 'assets/img/portrait-1.jpg' },
 ];
 const rollCards = cinematic.flatMap((w, i) => [
   { id: w.id, title: w.title, tags: w.tags, kind: 'cinematic' },
@@ -128,9 +128,11 @@ const countA = $('#count-a'), countB = $('#count-b');
 
 function renderList(side) {
   const items = LISTS[side];
+  // Design is no longer in the navigation: the header just names the list
   $('#column-switch').textContent = LABEL[side];
-  $('#column-switch').dataset.nav = side === 'cinematic' ? 'design' : 'cinematic';
-  $('#column-switch').setAttribute('aria-label', `Switch to ${side === 'cinematic' ? 'Design' : 'Cinematic'}`);
+  $('#column-switch').removeAttribute('data-nav');
+  $('#column-switch').setAttribute('aria-disabled', 'true');
+  $('#column-switch').tabIndex = -1;
   countB.textContent = pad(items.length);
   countA.textContent = '01';
   list.style.setProperty('--accent', side === 'cinematic' ? 'var(--cine)' : 'var(--design)');
@@ -178,7 +180,7 @@ function renderWork(side, id) {
     work.innerHTML = `
       <div class="work__video"><iframe src="https://player.vimeo.com/video/${w.vimeo}?title=0&byline=0&portrait=0&dnt=1" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="${esc(w.title)}"></iframe></div>
       <div class="work__body">
-        ${head(w.tags.join(' · '), `<span><b>Client</b>${esc(w.client)}</span>${w.format ? `<span><b>Format</b>${esc(w.format)}</span>` : ''}${w.producedFor ? `<span><b>Produced for</b>${esc(w.producedFor)}</span>` : '<span><b>Studio</b>NO ROLL</span>'}`)}
+        ${head(w.tags.join(' · '), `<span><b>Client</b>${esc(w.client)}</span>${w.format ? `<span><b>Format</b>${esc(w.format)}</span>` : ''}${w.producedFor ? `<span><b>Produced for</b>${esc(w.producedFor)}</span>` : '<span><b>Director</b>Veronika Dominiková</span>'}`)}
         ${w.idea ? section('Idea', `<p class="work__text">${esc(w.idea)}</p>`) : section('About', `<p class="work__text">${esc(w.text)}</p>`)}
         ${w.role && w.role.length ? section('My role', `<ul class="work__list">${w.role.map(r => `<li>${esc(r)}</li>`).join('')}</ul>${w.credits ? `<p class="work__text">${esc(w.credits)}</p>` : ''}`) : ''}
         ${w.result ? section('Result', `<p class="work__text">${esc(w.result)}</p>`) : ''}
@@ -198,16 +200,16 @@ function renderWork(side, id) {
     work.innerHTML = `
       <div class="work__body">
         <p class="work__kicker">${esc(w.role)}</p>
-        <h2 class="work__title">No Roll Studio</h2>
-        <div class="work__meta"><span><b>Led by</b>${esc(STUDIO.director)}</span><span><b>Based</b>Czech Republic, works everywhere</span></div>
+        <h2 class="work__title">${esc(STUDIO.director)}</h2>
+        <div class="work__meta"><span><b>Method</b>NO ROLL</span><span><b>Based</b>Czech Republic, works everywhere</span></div>
         ${section('About', w.intro.map(p => `<p class="work__text">${esc(p)}</p>`).join(''))}
-        ${section('What we do', `<ul class="chips">${w.services.map(s => `<li>${esc(s)}</li>`).join('')}</ul>`)}
+        ${section('What I do', `<ul class="chips">${w.services.map(s => `<li>${esc(s)}</li>`).join('')}</ul>`)}
         ${section('Pipeline', `<ul class="chips">${w.tools.map(s => `<li>${esc(s)}</li>`).join('')}</ul>`)}
         ${section('Contact', `<div class="work__contact">
           <a href="mailto:${esc(STUDIO.email)}"><span>Email</span><span>${esc(STUDIO.email)}</span></a>
           <a href="${esc(STUDIO.linkedin)}" target="_blank" rel="noopener"><span>LinkedIn</span><span>${esc(STUDIO.director)} ↗</span></a>
         </div>`)}
-        <img class="work__portrait" src="${esc(w.portrait)}" alt="${esc(STUDIO.director)}, creative director of NO ROLL studio" loading="lazy">
+        <img class="work__portrait" src="${esc(w.portrait)}" alt="${esc(STUDIO.director)}, AI film & campaign director" loading="lazy">
         ${nextBtn}
       </div>`;
   }

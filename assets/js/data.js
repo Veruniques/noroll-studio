@@ -7,7 +7,7 @@
 export const STUDIO = {
   name: 'NO ROLL studio',
   domain: 'noroll.studio',
-  tagline: 'AI cinematic production + visual design. Made right on the first roll.',
+  tagline: 'AI film & campaign director. Made right on the first roll.',
   email: 'hello@noroll.studio', // TODO: confirm address
   linkedin: 'https://www.linkedin.com/in/veronika-dominikova/',
   director: 'Veronika Dominiková',
@@ -178,22 +178,22 @@ export const design = [
 
 export const info = {
   id: 'studio',
-  title: 'Studio Info',
+  title: 'About me',
   tags: ['Who', 'How', 'Contact'],
-  role: 'Creative Director & Founder',
+  role: 'AI Film & Campaign Director',
   intro: [
-    'NO ROLL is a small studio for AI cinematic production and visual design. The name is the method: we don’t gamble on endless re-rolls and hope something sticks. Every frame is written, directed and art-directed on purpose.',
-    'Led by Veronika Dominiková, AI Creative Director who joined the team behind the first Emmy Award in Czech history, for the original series #marty_is_dead. Spots for cinema, TV and YouTube, combining storytelling, art direction and advanced AI workflows — visuals that lift products, services and ideas beyond standard AI content.',
-    'The other half of the brain does brands: identities, campaign systems and posters, mostly for small teams that need a whole brand, not just a logo.',
+    'I direct AI films and campaigns for cinema, TV and YouTube. NO ROLL is not a company, it’s the method: no endless re-rolls in the hope that something sticks. Every frame is written, directed and art-directed with intent.',
+    'I joined the team behind the first Emmy Award in Czech history, the original series #marty_is_dead, as AI Creative Director. Since then: a sponsor spot for the cinema screen, commercials for Raiffeisenbank, Monoprix, Fameplay, PPAS and Kofola, and hybrid productions combining live action and AI.',
+    'Before that, years in product and leadership: design team lead at Kiwi.com, COO and CMO roles. Which is why the work starts with the brief and ends with a result, not with a pretty frame.',
+    'Larger productions run with editors, voice directors and partner agencies, credited where they shaped the work.',
   ],
   services: [
-    'AI cinematic production',
+    'AI film & commercial direction',
     'Hybrid production (live action + AI)',
+    'Campaign concepts',
     'Creative & art direction',
     'Storytelling & scripting',
-    'Brand design & identity',
     'Campaign key visuals',
-    'Web design & development',
   ],
   tools: [
     'ComfyUI', 'Weavy', 'Magnific', 'Higgsfield', 'Midjourney', 'LoRA', 'Topaz',

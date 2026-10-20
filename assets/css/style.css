@@ -308,6 +308,7 @@ body[data-view="design"] .strip--design { opacity: 1; transform: none; }
 .column__title span { color: #fff; margin: 0 .05em; }
 .column__switch { font-size: 27px; color: #8c8c8c; }
 .column__switch:hover { color: #fff; }
+.column__switch[aria-disabled] { pointer-events: none; }
 .column__switch::after { content: '.'; }
 .column__close { color: #777; display: grid; place-items: center; width: 40px; height: 40px; }
 .column__close:hover { color: #fff; }
