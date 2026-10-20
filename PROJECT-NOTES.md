@@ -56,7 +56,10 @@ assets/img/og.jpg       social share image
   All six spread `...CVC`, which adds "Produced for: Czech Video Center (Fameplay)" and the rights notice
   "Produced for Czech Video Center (Fameplay) as a freelancer. All rights belong to Czech Video Center a.s."
   on the work page. Remove `...CVC` from an item for work that is fully NO ROLL's.
-  Currently: RB Cinema Spot, Monoprix, Fameplay Voice, Kofola Remake, RB Hybrid, PPAS.
+  Also per work: `format` (shown as Format), `role[]` (shown as "My role" list), `tools[]` (shown as chips).
+  Empty `role` / `tools` arrays hide that section.
+  Currently: Raiffeisenbank Cinema Spot, Monoprix, Raiffeisenbank Hybrid, Fameplay, Kofola — Phteven, PPAS.
+  Missing details: Kofola has no tools listed; PPAS has no role or tools yet.
 - `design[]` — visual work: `id`, `title`, `client`, `tags`, `cover`, `text`, `images[]` (stacked full-width on the detail page).
   Currently: Fameplay, Kurník Šopa, Beyond PEAQ.
 - `info` — the Studio Info page: `intro[]` paragraphs, `services[]`, `tools[]`, `portrait`.

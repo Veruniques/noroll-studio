@@ -178,8 +178,10 @@ function renderWork(side, id) {
     work.innerHTML = `
       <div class="work__video"><iframe src="https://player.vimeo.com/video/${w.vimeo}?title=0&byline=0&portrait=0&dnt=1" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="${esc(w.title)}"></iframe></div>
       <div class="work__body">
-        ${head(w.tags.join(' · '), `<span><b>Client</b>${esc(w.client)}</span>${w.producedFor ? `<span><b>Produced for</b>${esc(w.producedFor)}</span>` : '<span><b>Studio</b>NO ROLL</span>'}`)}
+        ${head(w.tags.join(' · '), `<span><b>Client</b>${esc(w.client)}</span>${w.format ? `<span><b>Format</b>${esc(w.format)}</span>` : ''}${w.producedFor ? `<span><b>Produced for</b>${esc(w.producedFor)}</span>` : '<span><b>Studio</b>NO ROLL</span>'}`)}
         ${section('About', `<p class="work__text">${esc(w.text)}</p>`)}
+        ${w.role && w.role.length ? section('My role', `<ul class="work__list">${w.role.map(r => `<li>${esc(r)}</li>`).join('')}</ul>`) : ''}
+        ${w.tools && w.tools.length ? section('Tools', `<ul class="chips">${w.tools.map(t => `<li>${esc(t)}</li>`).join('')}</ul>`) : ''}
         ${w.rights ? `<p class="work__rights">${esc(w.rights)}</p>` : ''}
         ${nextBtn}
       </div>`;
