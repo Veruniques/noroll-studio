@@ -42,7 +42,7 @@ assets/js/data.js       ALL CONTENT — edit text, videos, images here
 assets/js/app.js        UI: works list/detail, routing, film strips, Vimeo thumbs, title click → dog
 assets/js/roll.js       the 3D scene (Three.js): roll, tape on the floor, orbit, rewind
 assets/js/fire.js       the fire dog animation + flames on the title
-assets/img/dog-fire.webp  the chrome fire dog, background removed (900×781, faces right)
+assets/img/dog-run.webp   the chrome fire dog, animated, keyed from green screen (602×400, faces left, plays once)
 assets/img/work/        design visuals (Fameplay, Kurník Šopa, Beyond PEAQ), ~1600 px wide JPGs
 assets/img/portrait-*.jpg  portraits (portrait-1 is printed on the tape, portrait-3 on Studio Info)
 assets/img/og.jpg       social share image
@@ -80,7 +80,7 @@ The frames printed on the roll/tape are set in `app.js` → `designFrames` + `ro
 ## Look & feel
 
 - **Colours** (`style.css` `:root`): page `--bg: #ff5700`, ink `#111`, works rows `#cdcdcd` / hover `#2e2e2e`, column black, dots `--cine: #e2402f` / `--design: #7a4cff`. The 3D floor colour is `BG` at the top of `roll.js` (keep both in sync).
-- **Fonts:** Albert Sans for everything (Google Fonts). Unbounded 800 for the chrome CINEMATIC / DESIGN titles.
+- **Fonts:** Albert Sans for everything (Google Fonts). Michroma for the chrome CINEMATIC / ABOUT titles.
 - **Chrome titles:** `.side-label__text` in `style.css`: a metal gradient clipped to the text. `.is-burning` is the red-hot version used while on fire.
 - **Layout:** works column `--col-left: 28.2vw`, `--col-w: 43.6vw`; on screens under 820 px the column goes full width.
 
@@ -148,3 +148,12 @@ Open http://localhost:8000. It needs internet for Three.js, Google Fonts and Vim
 - Right side label on the home screen is **About** (opens the About me page, id `studio`). Design is no longer in the navigation; its data and `?view=design` route still exist.
 - About me services narrowed to film and campaign work (no identity, no web).
 - Cache-busting: bump the `?v=` value in index.html (css + app.js) and in app.js imports (data.js, fire.js) whenever content changes, or browsers keep serving the old JS.
+
+## 2026-10-20 — SEO build, dog stamp, About copy
+- Static pages per case: run `node scripts/build.mjs` after content edits (see README). Shell lives in `src/template.html`.
+- Shared HTML in `assets/js/render.js` (used by the browser and the build).
+- Slugs renamed: raiffeisenbank-cinema-spot, raiffeisenbank-hybrid, fameplay-brand-voices, kofola-phteven (old ones alias).
+- Cinematic click = fire only. The dog now stamps a case open (see README).
+- About: lead line + Veru's own text, title "Concept & Audiovisual Director", #marty_is_dead role = AI Creative Lead.
+- Email: veronikadominikova@gmail.com. ComfyUI removed from pipeline.
+- Canonical URL is STUDIO.url (github.io for now) — change when the domain is decided.

@@ -1,11 +1,15 @@
-import { STUDIO, cinematic, design, info } from './data.js?v=20261020c';
-import { runDogOnto, extinguish } from './fire.js?v=20261020c';
+import { STUDIO, cinematic, design, info } from './data.js?v=202610201342';
+import { igniteTitle, extinguish, dogStamp, preloadDog } from './fire.js?v=202610201342';
+import { esc, pad, listHTML, workHTML, pathFor, pageMeta } from './render.js?v=202610201342';
 
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
-const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const pad = n => String(n).padStart(2, '0');
-const STAR = '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 0v14M0 7h14M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.2"/></svg>';
+
+// Site root. Pages live at /, /cinematic/, /about/ and /work/<id>/, each with <base href> pointing at
+// the root. Freeze it as an absolute URL so relative links keep working after pushState.
+const baseEl = document.querySelector('base') || document.head.appendChild(document.createElement('base'));
+const ROOT = new URL(baseEl.getAttribute('href') || './', location.href);
+baseEl.href = ROOT.href;
 
 const LISTS = {
   cinematic: [...cinematic.map(w => ({ ...w, kind: 'cinematic' })), { ...info, kind: 'info' }],
@@ -136,13 +140,7 @@ function renderList(side) {
   countB.textContent = pad(items.length);
   countA.textContent = '01';
   list.style.setProperty('--accent', side === 'cinematic' ? 'var(--cine)' : 'var(--design)');
-  list.innerHTML = items.map((w, i) => `
-    <li data-i="${i}" style="${w.kind === 'info' ? '--accent:#111' : ''}">
-      <button type="button" data-open-work="${w.id}">
-        <span class="works__title">${STAR}${esc(w.title)}</span>
-        <span class="works__tags">// ${w.tags.map(esc).join(' // ')}</span>
-      </button>
-    </li>`).join('');
+  list.innerHTML = listHTML(items, side);
   $$('li', list).forEach(li => {
     const i = +li.dataset.i;
     const enter = () => {
@@ -158,76 +156,80 @@ function renderList(side) {
   });
 }
 
-function section(title, html) {
-  return `<h3 class="work__h">${STAR}${esc(title)}</h3>${html}`;
-}
-
-function renderWork(side, id) {
+function renderWork(side, id, { folded = false } = {}) {
   const items = LISTS[side];
   const i = items.findIndex(w => w.id === id);
-  if (i < 0) return false;
+  if (i < 0) return null;
   const w = items[i];
-  const next = items[(i + 1) % items.length];
   countA.textContent = pad(i + 1);
   countB.textContent = pad(items.length);
-  const nextBtn = `<button class="work__next" type="button" data-open-work="${next.id}"><span>Next</span><span>${esc(next.title)}</span></button>`;
-  const head = (kicker, meta) => `
-    <p class="work__kicker">${esc(kicker)}</p>
-    <h2 class="work__title">${esc(w.title)}</h2>
-    ${meta ? `<div class="work__meta">${meta}</div>` : ''}`;
+  const fold = folded && w.kind === 'cinematic';
+  work.innerHTML = workHTML(w, { index: i, next: items[(i + 1) % items.length], side, studio: STUDIO, folded: fold });
+  work.classList.toggle('is-folded', fold);
+  return w;
+}
 
-  if (w.kind === 'cinematic') {
-    work.innerHTML = `
-      <div class="work__video"><iframe src="https://player.vimeo.com/video/${w.vimeo}?title=0&byline=0&portrait=0&dnt=1" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="${esc(w.title)}"></iframe></div>
-      <div class="work__body">
-        ${head(w.tags.join(' · '), `<span><b>Client</b>${esc(w.client)}</span>${w.format ? `<span><b>Format</b>${esc(w.format)}</span>` : ''}${w.producedFor ? `<span><b>Produced for</b>${esc(w.producedFor)}</span>` : '<span><b>Director</b>Veronika Dominiková</span>'}`)}
-        ${w.idea ? section('Idea', `<p class="work__text">${esc(w.idea)}</p>`) : section('About', `<p class="work__text">${esc(w.text)}</p>`)}
-        ${w.role && w.role.length ? section('My role', `<ul class="work__list">${w.role.map(r => `<li>${esc(r)}</li>`).join('')}</ul>${w.credits ? `<p class="work__text">${esc(w.credits)}</p>` : ''}`) : ''}
-        ${w.result ? section('Result', `<p class="work__text">${esc(w.result)}</p>`) : ''}
-        ${w.tools && w.tools.length ? section('Tools', `<ul class="chips">${w.tools.map(t => `<li>${esc(t)}</li>`).join('')}</ul>`) : ''}
-        ${w.rights ? `<p class="work__rights">${esc(w.rights)}</p>` : ''}
-        ${nextBtn}
-      </div>`;
-  } else if (w.kind === 'design') {
-    work.innerHTML = `
-      <div class="work__body">
-        ${head(w.tags.join(' · '), `<span><b>Client</b>${esc(w.client)}</span>`)}
-        ${section('About', `<p class="work__text">${esc(w.text)}</p>`)}
-      </div>
-      <div class="work__gallery">${w.images.map((src, k) => `<img src="${src}" alt="${esc(w.title)} — visual ${k + 1}" loading="${k < 2 ? 'eager' : 'lazy'}" decoding="async">`).join('')}</div>
-      <div class="work__body">${nextBtn}</div>`;
-  } else {
-    work.innerHTML = `
-      <div class="work__body">
-        <p class="work__kicker">${esc(w.role)}</p>
-        <h2 class="work__title">${esc(STUDIO.director)}</h2>
-        <div class="work__meta"><span><b>Method</b>NO ROLL</span><span><b>Based</b>Czech Republic, works everywhere</span></div>
-        ${section('About', w.intro.map(p => `<p class="work__text">${esc(p)}</p>`).join(''))}
-        ${section('What I do', `<ul class="chips">${w.services.map(s => `<li>${esc(s)}</li>`).join('')}</ul>`)}
-        ${section('Pipeline', `<ul class="chips">${w.tools.map(s => `<li>${esc(s)}</li>`).join('')}</ul>`)}
-        ${section('Contact', `<div class="work__contact">
-          <a href="mailto:${esc(STUDIO.email)}"><span>Email</span><span>${esc(STUDIO.email)}</span></a>
-          <a href="${esc(STUDIO.linkedin)}" target="_blank" rel="noopener"><span>LinkedIn</span><span>${esc(STUDIO.director)} ↗</span></a>
-        </div>`)}
-        <img class="work__portrait" src="${esc(w.portrait)}" alt="${esc(STUDIO.director)}, AI film & campaign director" loading="lazy">
-        ${nextBtn}
-      </div>`;
+/* ---------------- the dog stamps the case open ---------------- */
+let stopStamp = null;
+function unfold() {
+  const tab = $('.work__tab', work);
+  if (tab) {
+    tab.classList.add('is-pressed');
+    setTimeout(() => tab.classList.add('is-gone'), 160);
   }
-  return true;
+  work.classList.remove('is-folded');
+}
+function stamp() {
+  const tab = $('.work__tab', work);
+  if (!tab) return;
+  stopStamp = dogStamp(tab, { onSlam: unfold });
+}
+function cancelStamp() { if (stopStamp) { const s = stopStamp; stopStamp = null; s(); } }
+// any interaction skips the animation (and unfolds straight away)
+['wheel', 'touchstart', 'keydown'].forEach(t => window.addEventListener(t, () => { if (stopStamp && work.classList.contains('is-folded')) cancelStamp(); }, { passive: true }));
+
+/* ---------------- page metadata follows the route ---------------- */
+function setMeta(view, w) {
+  const m = pageMeta({ view, w: w && w.kind !== 'design' ? w : null, studio: STUDIO, cinematic });
+  document.title = m.title;
+  const set = (sel, attr, val) => { const el = $(sel); if (el) el.setAttribute(attr, val); };
+  set('meta[name="description"]', 'content', m.description);
+  set('link[rel="canonical"]', 'href', m.url);
+  set('meta[property="og:url"]', 'content', m.url);
+  set('meta[property="og:title"]', 'content', m.title);
+  set('meta[property="og:description"]', 'content', m.description);
 }
 
 /* ---------------- routing: ?view=cinematic|design&work=id ---------------- */
+// renamed slugs: old links keep working
+const ALIAS = { 'rb-cinema': 'raiffeisenbank-cinema-spot', 'rb-hybrid': 'raiffeisenbank-hybrid', 'fameplay-voice': 'fameplay-brand-voices', kofola: 'kofola-phteven' };
 function readURL() {
+  const r = readRawURL();
+  return r.work && ALIAS[r.work] ? { ...r, work: ALIAS[r.work] } : r;
+}
+function readRawURL() {
   const q = new URLSearchParams(location.search);
-  const view = ['cinematic', 'design'].includes(q.get('view')) ? q.get('view') : 'home';
-  return { view, work: view === 'home' ? null : q.get('work') };
+  // old links: ?view=cinematic&work=monoprix
+  if (q.get('view')) {
+    const view = ['cinematic', 'design'].includes(q.get('view')) ? q.get('view') : 'home';
+    return { view, work: view === 'home' ? null : q.get('work') };
+  }
+  let rel = location.pathname.startsWith(ROOT.pathname) ? location.pathname.slice(ROOT.pathname.length) : '';
+  rel = decodeURIComponent(rel.replace(/index\.html$/, ''));
+  const m = rel.match(/^work\/([^/]+)\/?$/);
+  if (m) return { view: LISTS.cinematic.some(w => w.id === m[1]) ? 'cinematic' : 'design', work: m[1] };
+  if (/^about\/?$/.test(rel)) return { view: 'cinematic', work: 'studio' };
+  if (/^cinematic\/?$/.test(rel)) return { view: 'cinematic', work: null };
+  return { view: 'home', work: null };
 }
 
 function apply({ view, work: id }, { fromNav } = {}) {
+  cancelStamp();
   document.body.dataset.view = view;
   if (view !== 'cinematic') extinguish();          // the fire only burns while you're in Cinematic
   roll && roll.setMode(view);
   if (view === 'home') {
+    setMeta('home');
     col.classList.remove('is-open', 'is-detail');
     setTimeout(() => { if (document.body.dataset.view === 'home') col.hidden = true; }, 760);
     return;
@@ -235,13 +237,17 @@ function apply({ view, work: id }, { fromNav } = {}) {
   col.hidden = false;
   requestAnimationFrame(() => col.classList.add('is-open'));
   renderList(view);
-  if (id && renderWork(view, id)) {
+  const w = id ? renderWork(view, id, { folded: fromNav }) : null;
+  if (w) {
     col.classList.add('is-detail');
   } else {
     col.classList.remove('is-detail');
     work.innerHTML = '';
+    work.classList.remove('is-folded');
   }
+  setMeta(view, w);
   scroller.scrollTop = 0;
+  if (w && work.classList.contains('is-folded')) stamp();
   if (fromNav) {
     const focusEl = col.classList.contains('is-detail') ? $('#back') : $('button', list);
     focusEl && focusEl.focus({ preventScroll: true });
@@ -249,8 +255,7 @@ function apply({ view, work: id }, { fromNav } = {}) {
 }
 
 function go(view, id = null) {
-  const url = view === 'home' ? location.pathname : `?view=${view}${id ? `&work=${encodeURIComponent(id)}` : ''}`;
-  history.pushState(null, '', url);
+  history.pushState(null, '', new URL(pathFor(view, id), ROOT).href);
   apply({ view, work: id }, { fromNav: true });
 }
 
@@ -260,16 +265,17 @@ document.addEventListener('click', e => {
   const nav = e.target.closest('[data-nav]');
   if (nav) {
     e.preventDefault();
-    // the Cinematic title: the fire dog runs in, leaps onto it and sets it alight, then we go
+    // the Cinematic title catches fire and keeps burning while you're in Cinematic
     if (nav.matches('.side-label--left') && document.body.dataset.view === 'home') {
-      runDogOnto(nav.querySelector('.side-label__text') || nav).then(ran => { if (ran) go('cinematic'); });
-      return;
+      igniteTitle(nav.querySelector('.side-label__text') || nav);
     }
     go(nav.dataset.nav);
     return;
   }
   const open = e.target.closest('[data-open-work]');
   if (open) {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return; // let "open in new tab" work
+    e.preventDefault();
     const id = open.dataset.openWork;
     let view = document.body.dataset.view;
     if (view === 'home' || !LISTS[view].some(w => w.id === id)) {
@@ -294,4 +300,11 @@ document.addEventListener('keydown', e => {
   if (e.key === ' ' && idle) { e.preventDefault(); roll.rewind(); }
 });
 
-apply(readURL());
+// tidy old ?view= links into the new addresses
+{
+  const first = readURL();
+  if (location.search.includes('view=') && first.view === 'cinematic') history.replaceState(null, '', new URL(pathFor(first.view, first.work), ROOT).href);
+  apply(first);
+}
+// fetch the dog once the page is idle, so the first case opens without waiting
+(window.requestIdleCallback || (f => setTimeout(f, 1500)))(() => preloadDog());

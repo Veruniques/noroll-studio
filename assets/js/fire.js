@@ -1,21 +1,23 @@
-/* The fire dog: runs in from the left, leaps onto a title and sets it alight.
-   runDogOnto(titleEl) resolves once the dog has landed and the fire has caught;
-   the fire keeps burning until extinguish() is called. */
+/* Fire + the fire dog.
+   igniteTitle(el): sets a title alight; it keeps burning until extinguish().
+   dogStamp(anchor, { onSlam }): the chrome dog runs in from the right, sits on top of
+   `anchor`, lifts a paw and slams it down. onSlam fires on the slam (that's when the
+   case unfolds). Returns cancel(); cancelling also fires onSlam, so content never stays folded. */
 
-const DOG_SRC = new URL('../img/dog-fire.webp', import.meta.url).href;
-const DOG_RATIO = 900 / 781;          // image width / height, dog faces right
-
-const ease = {
-  inOut: t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2,
-  out: t => 1 - Math.pow(1 - t, 3),
+// dog-run.webp: keyed from the green-screen render, 63 frames at 33 ms, plays once.
+const DOG = {
+  src: new URL('../img/dog-run.webp', import.meta.url).href,
+  ratio: 602 / 400,   // width / height
+  pawX: 0.158,        // where the slamming paw lands, as a share of the image width
+  floor: 0.981,       // where the paws touch the ground, as a share of the image height
+  run: 600,           // ms the dog is still running in
+  slam: 1716,         // ms until the paw hits
+  end: 2079,          // ms, last frame
 };
+
+const ease = { out: t => 1 - Math.pow(1 - t, 3) };
 const lerp = (a, b, t) => a + (b - a) * t;
 const wait = ms => new Promise(r => setTimeout(r, ms));
-
-// preload so the first click doesn't wait on the network
-const dogImg = new Image();
-dogImg.src = DOG_SRC;
-const dogReady = dogImg.decode ? dogImg.decode().catch(() => {}) : Promise.resolve();
 
 /* ---------------- fire on a title ---------------- */
 let fire = null;
@@ -43,7 +45,7 @@ function maskPoints(el) {
   return { pts, rect: r };
 }
 
-function ignite(el) {
+export function igniteTitle(el) {
   extinguish();
   el.classList.add('is-burning');
   const { pts, rect } = maskPoints(el);
@@ -127,71 +129,66 @@ export function extinguish() {
 export const isBurning = () => !!fire;
 
 /* ---------------- the dog ---------------- */
-let busy = false;
+let dogBlob = null;
+// fetch once; every run gets a fresh object URL so the animation restarts from frame 0
+export function preloadDog() {
+  if (!dogBlob) dogBlob = fetch(DOG.src).then(r => (r.ok ? r.blob() : null)).catch(() => null);
+  return dogBlob;
+}
 
-export async function runDogOnto(titleEl) {
-  if (busy) return false;
-  busy = true;
-  await dogReady;
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const tr = titleEl.getBoundingClientRect();
-  const fs = parseFloat(getComputedStyle(titleEl).fontSize);
-  const vw = window.innerWidth, vh = window.innerHeight;
-
-  if (reduce) { ignite(titleEl); busy = false; return true; }
-
-  const dogH = Math.max(110, Math.min(fs * 3.1, vh * 0.3));
-  const dogW = dogH * DOG_RATIO;
-  const dog = document.createElement('img');
-  dog.src = DOG_SRC; dog.alt = ''; dog.className = 'fire-dog';
-  Object.assign(dog.style, { width: `${dogW}px`, height: `${dogH}px` });
-  document.body.appendChild(dog);
-
-  // positions are the dog's bottom-centre (its paws)
-  const start = { x: -dogW * 0.7, y: vh * 0.42 };
-  const land = { x: tr.left + Math.min(tr.width * 0.42, dogW * 0.75), y: tr.top + fs * 0.16 };
-  const take = { x: land.x - dogW * 0.55, y: Math.min(land.y - fs * 0.6, vh * 0.72) };
-  const place = (x, y, rot = 0, sx = 1, sy = 1) => {
-    dog.style.transform = `translate(${x - dogW / 2}px, ${y - dogH}px) rotate(${rot}deg) scale(${sx}, ${sy})`;
+export function dogStamp(anchor, { onSlam } = {}) {
+  let cancelled = false, slammed = false, raf = 0, dog = null, url = null;
+  const timers = [];
+  const slam = () => { if (!slammed) { slammed = true; onSlam && onSlam(); } };
+  const remove = () => { if (dog) dog.remove(); if (url) URL.revokeObjectURL(url); dog = null; url = null; };
+  const cancel = () => {
+    if (cancelled) return;
+    cancelled = true;
+    cancelAnimationFrame(raf);
+    timers.forEach(clearTimeout);
+    slam();
+    remove();
   };
 
-  const RUN = 900, LEAP = 520;
-  await new Promise(resolve => {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { cancel(); return cancel; }
+
+  (async () => {
+    const blob = await Promise.race([preloadDog(), wait(1500).then(() => null)]);
+    if (cancelled) return;
+    if (!blob) return cancel();
+    url = URL.createObjectURL(blob);
+    dog = new Image();
+    dog.alt = ''; dog.className = 'fire-dog'; dog.decoding = 'sync';
+    dog.src = url;
+    try { await dog.decode(); } catch { return cancel(); }
+    if (cancelled) return;
+
+    const r0 = anchor.getBoundingClientRect();
+    const w = Math.min(r0.width * 0.62, 440), h = w / DOG.ratio;
+    Object.assign(dog.style, { width: `${w}px`, height: `${h}px` });
+    const place = (x, y) => { dog.style.transform = `translate(${x}px, ${y}px)`; };
+    const from = window.innerWidth + 20;
+    document.body.appendChild(dog);
+
     const t0 = performance.now();
     (function step(now) {
-      const t = now - t0;
-      if (t < RUN) {
-        // gallop: forward with a bound every ~300 ms
-        const k = ease.inOut(t / RUN);
-        const phase = (t / 300) * Math.PI;
-        const bound = Math.abs(Math.sin(phase)) * dogH * 0.1;
-        place(lerp(start.x, take.x, k), lerp(start.y, take.y, k) - bound,
-          Math.sin(phase * 2) * 4 + 6, 1 + Math.sin(phase * 2) * 0.02, 1 - Math.sin(phase * 2) * 0.03);
-        requestAnimationFrame(step);
-      } else if (t < RUN + LEAP) {
-        // the leap: a clean arc onto the letters
-        const k = (t - RUN) / LEAP;
-        const arc = Math.sin(k * Math.PI) * dogH * 0.55;
-        place(lerp(take.x, land.x, ease.out(k)), lerp(take.y, land.y, k) - arc, lerp(-14, 8, k));
-        requestAnimationFrame(step);
-      } else {
-        resolve();
-      }
+      if (cancelled) return;
+      const r = anchor.getBoundingClientRect();   // follow the tab while the column settles
+      const finalX = r.left + r.width * 0.16 - DOG.pawX * w;
+      const k = Math.min(1, (now - t0) / DOG.run);
+      place(lerp(from, finalX, ease.out(k)), r.top - DOG.floor * h);
+      raf = requestAnimationFrame(step);
     })(t0);
-  });
 
-  // landing: squash, catch fire
-  ignite(titleEl);
-  dog.animate([
-    { transform: dog.style.transform.replace(/scale\([^)]*\)/, 'scale(1.06, .9)') },
-    { transform: dog.style.transform.replace(/scale\([^)]*\)/, 'scale(1, 1)') },
-  ], { duration: 260, easing: 'cubic-bezier(.2,.8,.2,1)' });
-  place(land.x, land.y, 0);
-  await wait(900);
-  dog.style.transition = 'opacity .45s ease, transform .45s ease';
-  dog.style.opacity = '0';
-  place(land.x + dogW * 0.25, land.y - dogH * 0.15, -8);
-  setTimeout(() => dog.remove(), 500);
-  busy = false;
-  return true;
+    timers.push(setTimeout(slam, DOG.slam));
+    timers.push(setTimeout(() => {
+      cancelAnimationFrame(raf);
+      if (!dog) return;
+      dog.style.transition = 'opacity .45s ease';
+      dog.style.opacity = '0';
+      timers.push(setTimeout(() => { cancelled = true; remove(); }, 480));
+    }, DOG.end + 350));
+  })();
+
+  return cancel;
 }

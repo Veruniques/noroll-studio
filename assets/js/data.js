@@ -8,9 +8,12 @@ export const STUDIO = {
   name: 'NO ROLL',
   domain: 'noroll.studio',
   tagline: 'AI film & campaign director. Made right on the first roll.',
-  email: 'hello@noroll.studio', // TODO: confirm address
+  email: 'veronikadominikova@gmail.com',
   linkedin: 'https://www.linkedin.com/in/veronika-dominikova/',
   director: 'Veronika Dominiková',
+  // canonical address of the site (used for SEO: canonical links, sitemap, structured data).
+  // Change this one line when the site moves to its own domain, then run `node scripts/build.mjs`.
+  url: 'https://veruniques.github.io/noroll-studio/',
 };
 
 // Work made as a freelancer under Czech Video Center (Fameplay): credit + rights notice on the work page
@@ -21,7 +24,10 @@ const CVC = {
 
 export const cinematic = [
   {
-    id: 'rb-cinema',
+    id: 'raiffeisenbank-cinema-spot',
+    thumb: 'https://i.vimeocdn.com/video/2158442829-737c71089531fa020c87fcaf2115af945c1bc8831c370b037edc353f1910e045-d_1280',
+    uploaded: '2026-05-17',
+    duration: 20, // seconds
     title: 'Raiffeisenbank Cinema Spot',
     client: 'Raiffeisenbank',
     format: 'Sponsor spot for cinema · fully AI',
@@ -41,6 +47,9 @@ export const cinematic = [
   },
   {
     id: 'monoprix',
+    thumb: 'https://i.vimeocdn.com/video/2158442638-f43fe6dfe637f445ff998864b8da52799e45cbceb5e853ab9b5b31b35702067a-d_1280',
+    uploaded: '2026-05-17',
+    duration: 18, // seconds
     title: 'Monoprix',
     client: 'Monoprix',
     format: 'Commercial · fully AI',
@@ -61,7 +70,10 @@ export const cinematic = [
     tools: ['Nano Banana Pro', 'Kling 3.0', 'DaVinci Resolve', 'ChatGPT', 'ElevenLabs'],
   },
   {
-    id: 'rb-hybrid',
+    id: 'raiffeisenbank-hybrid',
+    thumb: 'https://i.vimeocdn.com/video/2158442765-9ee46510ca99c9070d71b3d37c9e6d31c6819ac58c3d4e721d3a82f4833b6216-d_1280',
+    uploaded: '2026-05-17',
+    duration: 35, // seconds
     title: 'Raiffeisenbank Hybrid',
     client: 'Raiffeisenbank',
     format: 'Commercial · hybrid production (live action + AI)',
@@ -83,7 +95,10 @@ export const cinematic = [
     tools: ['Nano Banana', 'ChatGPT', 'Runway'],
   },
   {
-    id: 'fameplay-voice',
+    id: 'fameplay-brand-voices',
+    thumb: 'https://i.vimeocdn.com/video/2158442973-68630b5d339b5e019d035df11ad2018b6159a7495da03a8e877b9889b8814811-d_1280',
+    uploaded: '2026-05-17',
+    duration: 60, // seconds
     title: 'Fameplay',
     client: 'Fameplay',
     format: 'Ad campaign · fully AI',
@@ -104,6 +119,9 @@ export const cinematic = [
   },
   {
     id: 'ppas',
+    thumb: 'https://i.vimeocdn.com/video/2158444820-885315c7b35f6edbab7959740a4e0480b73dbdb3a47ca9c5e8c07fef142032ba-d_1280',
+    uploaded: '2026-05-17',
+    duration: 10, // seconds
     title: 'PPAS',
     client: 'PPAS',
     format: 'TV commercial · AI',
@@ -120,7 +138,10 @@ export const cinematic = [
     tools: ['Kling 3.0'],
   },
   {
-    id: 'kofola',
+    id: 'kofola-phteven',
+    thumb: 'https://i.vimeocdn.com/video/2158442417-478c2583f626cdc0ed66d59e82d66e89adb44d20774a0ea1210949a74ca4700b-d_1280',
+    uploaded: '2026-05-17',
+    duration: 14, // seconds
     title: 'Kofola — Phteven',
     client: 'Kofola',
     format: 'Commercial · fully AI',
@@ -180,10 +201,11 @@ export const info = {
   id: 'studio',
   title: 'About me',
   tags: ['Who', 'How', 'Contact'],
-  role: 'AI Film & Campaign Director',
+  role: 'Concept & Audiovisual Director',
+  lead: 'From napkin sketch to TV-ready master. On the first roll.',
   intro: [
-    'I direct AI films and campaigns for cinema, TV and YouTube. NO ROLL is not a company, it’s the method: no endless re-rolls in the hope that something sticks. Every frame is written, directed and art-directed with intent.',
-    'I joined the team behind the first Emmy Award in Czech history, the original series #marty_is_dead, as AI Creative Director. Since then: a sponsor spot for the cinema screen, commercials for Raiffeisenbank, Monoprix, Fameplay, PPAS and Kofola, and hybrid productions combining live action and AI.',
+    'I work with brands that have something to say but want to bypass the friction of traditional production. As a Concept & Audiovisual Director, I design the creative strategy and transform it into high-impact video campaigns using advanced AI workflows. I don’t just generate images; I direct coherent cinematic stories with precision, rhythm, and emotion.',
+    'I joined the team behind the first Emmy Award in Czech history, the original series #marty_is_dead, as AI Creative Lead. Since then: a sponsor spot for the cinema screen, commercials for Raiffeisenbank, Monoprix, Fameplay, PPAS and Kofola, and hybrid productions combining live action and AI.',
     'Before that, years in product and leadership: design team lead at Kiwi.com, COO and CMO roles. Which is why the work starts with the brief and ends with a result, not with a pretty frame.',
     'Larger productions run with editors, voice directors and partner agencies, credited where they shaped the work.',
   ],
@@ -196,7 +218,7 @@ export const info = {
     'Campaign key visuals',
   ],
   tools: [
-    'ComfyUI', 'Weavy', 'Magnific', 'Higgsfield', 'Midjourney', 'LoRA', 'Topaz',
+    'Weavy', 'Magnific', 'Higgsfield', 'Midjourney', 'LoRA', 'Topaz',
     'DaVinci Resolve', 'ElevenLabs', 'Photoshop', 'Figma', 'Claude MCP',
   ],
   portrait: 'assets/img/portrait-3.jpg',

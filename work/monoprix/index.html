@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <base href="../../">
+  <title>Monoprix — Commercial, fully AI | Veronika Dominiková</title>
+  <meta name="description" content="Monoprix: An exploration of Monoprix’s role as curator, taken to its logical extreme: a job interview in which Monoprix HR assesses a product’s suitability…">
+  <meta name="author" content="Veronika Dominiková">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-video-preview:-1">
+  <link rel="canonical" href="https://veruniques.github.io/noroll-studio/work/monoprix/">
+  <meta name="theme-color" content="#ff5700">
+  <meta property="og:type" content="video.other">
+  <meta property="og:site_name" content="Veronika Dominiková — NO ROLL">
+  <meta property="og:url" content="https://veruniques.github.io/noroll-studio/work/monoprix/">
+  <meta property="og:title" content="Monoprix — Commercial, fully AI | Veronika Dominiková">
+  <meta property="og:description" content="Monoprix: An exploration of Monoprix’s role as curator, taken to its logical extreme: a job interview in which Monoprix HR assesses a product’s suitability…">
+  <meta property="og:image" content="https://i.vimeocdn.com/video/2158442638-f43fe6dfe637f445ff998864b8da52799e45cbceb5e853ab9b5b31b35702067a-d_1280">
+  <meta property="og:locale" content="en_GB">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Monoprix — Commercial, fully AI | Veronika Dominiková">
+  <meta name="twitter:description" content="Monoprix: An exploration of Monoprix’s role as curator, taken to its logical extreme: a job interview in which Monoprix HR assesses a product’s suitability…">
+  <meta name="twitter:image" content="https://i.vimeocdn.com/video/2158442638-f43fe6dfe637f445ff998864b8da52799e45cbceb5e853ab9b5b31b35702067a-d_1280">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://player.vimeo.com">
+  <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@200;300;400;500;600;900&family=Michroma&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css?v=202610201342">
+  <script type="importmap">
+    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+                   "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }
+  </script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://veruniques.github.io/noroll-studio/#person","name":"Veronika Dominiková","jobTitle":"AI Film & Campaign Director","description":"Concept & Audiovisual Director creating AI-driven video campaigns and commercials for cinema, TV and YouTube.","url":"https://veruniques.github.io/noroll-studio/","email":"mailto:veronikadominikova@gmail.com","image":"https://veruniques.github.io/noroll-studio/assets/img/og.jpg","sameAs":["https://www.linkedin.com/in/veronika-dominikova/"],"address":{"@type":"PostalAddress","addressCountry":"CZ"},"knowsAbout":["AI video production","AI commercials","Creative direction","Hybrid live action and AI production","Storyboarding","Generative AI film"]},{"@type":"WebSite","@id":"https://veruniques.github.io/noroll-studio/#website","url":"https://veruniques.github.io/noroll-studio/","name":"Veronika Dominiková — NO ROLL","inLanguage":"en","publisher":{"@id":"https://veruniques.github.io/noroll-studio/#person"}},{"@type":"VideoObject","name":"Monoprix — Monoprix","description":"An exploration of Monoprix’s role as curator, taken to its logical extreme: a job interview in which Monoprix HR assesses a product’s suitability for its shelves. Every item must earn its place.","thumbnailUrl":["https://i.vimeocdn.com/video/2158442638-f43fe6dfe637f445ff998864b8da52799e45cbceb5e853ab9b5b31b35702067a-d_1280"],"uploadDate":"2026-05-17","duration":"PT18S","embedUrl":"https://player.vimeo.com/video/1193051592","url":"https://veruniques.github.io/noroll-studio/work/monoprix/","genre":"Fully AI, Commercial","creator":{"@id":"https://veruniques.github.io/noroll-studio/#person"},"copyrightHolder":{"@type":"Organization","name":"Czech Video Center a.s."}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://veruniques.github.io/noroll-studio/"},{"@type":"ListItem","position":2,"name":"Cinematic","item":"https://veruniques.github.io/noroll-studio/cinematic/"},{"@type":"ListItem","position":3,"name":"Monoprix","item":"https://veruniques.github.io/noroll-studio/work/monoprix/"}]}]}</script>
+</head>
+<body data-view="cinematic">
+  <div class="loader" aria-hidden="true">NO ROLL.</div>
+  <canvas id="scene" aria-hidden="true"></canvas>
+
+  <!-- unrolled film strips, shown beside the works column -->
+  <div class="strip strip--cinematic" aria-hidden="true"><div class="strip__track"></div></div>
+  <div class="strip strip--design" aria-hidden="true"><div class="strip__track"></div></div>
+
+  <a class="logo" href="./" data-nav="home" aria-label="Veronika Dominiková, NO ROLL, home">
+    <span class="logo__mark">NR</span>
+    <span class="logo__word">NO&nbsp;ROLL.</span>
+  </a>
+
+  <p class="hero">Veronika Dominiková.<br>AI film &amp; campaign director.<br>Made right on the first roll.</p>
+
+  <dl class="hud" aria-label="Scene controls">
+    <div><dt id="hud-rewind-label">Rewind</dt><dd><button type="button" data-key="rewind">[Space]</button></dd></div>
+  </dl>
+
+  <a class="now-playing" href="work/raiffeisenbank-cinema-spot/" data-open-work="raiffeisenbank-cinema-spot" aria-label="Open Raiffeisenbank Cinema Spot">
+    <span class="now-playing__label">Now Playing</span>
+    <span class="now-playing__screen">
+      <iframe title="Raiffeisenbank Cinema Spot preview" src="https://player.vimeo.com/video/1193051888?background=1&muted=1&loop=1&dnt=1" allow="autoplay; fullscreen" loading="lazy" tabindex="-1"></iframe>
+    </span>
+  </a>
+
+  <nav class="bottom" aria-label="Sections">
+    <a class="side-label side-label--left" href="cinematic/" data-nav="cinematic"><span class="side-label__text">Cinematic</span></a>
+    <button class="view-works" type="button" data-nav="cinematic">View Works</button>
+    <a class="side-label side-label--right" href="about/" data-open-work="studio"><span class="side-label__text">About</span></a>
+  </nav>
+
+  <!-- the works column -->
+  <section class="column is-open is-detail" id="column" aria-label="Works">
+    <div class="column__scroll" id="column-scroll">
+      <header class="column__head">
+        <div class="column__bar">
+          <p class="column__title">Works <span>_</span> <button type="button" class="column__switch" id="column-switch">Cinematic</button></p>
+          <a class="column__close" href="./" data-nav="home" aria-label="Close">
+            <svg viewBox="0 0 24 24" width="30" height="30"><path d="M3 3l18 18M21 3L3 21" stroke="currentColor" stroke-width="1.2" fill="none"/></svg>
+          </a>
+        </div>
+        <div class="counter" aria-hidden="true"><span id="count-a">02</span><i></i><span id="count-b">07</span></div>
+      </header>
+      <ol class="works" id="works">
+    <li data-i="0" style="">
+      <a class="works__row" href="work/raiffeisenbank-cinema-spot/" data-open-work="raiffeisenbank-cinema-spot">
+        <span class="works__title"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 0v14M0 7h14M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.2"/></svg>Raiffeisenbank Cinema Spot</span>
+        <span class="works__tags">// Fully AI // Cinema Sponsor Spot</span>
+      </a>
+    </li>
+    <li data-i="1" style="">
+      <a class="works__row" href="work/monoprix/" data-open-work="monoprix">
+        <span class="works__title"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 0v14M0 7h14M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.2"/></svg>Monoprix</span>
+        <span class="works__tags">// Fully AI // Commercial</span>
+      </a>
+    </li>
+    <li data-i="2" style="">
+      <a class="works__row" href="work/raiffeisenbank-hybrid/" data-open-work="raiffeisenbank-hybrid">
+        <span class="works__title"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 0v14M0 7h14M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.2"/></svg>Raiffeisenbank Hybrid</span>
+        <span class="works__tags">// Hybrid // Live Action + AI</span>
+      </a>
+    </li>
+    <li data-i="3" style="">
+      <a class="works__row" href="work/fameplay-brand-voices/" data-open-work="fameplay-brand-voices">
+        <span class="works__title"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 0v14M0 7h14M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.2"/></svg>Fameplay</span>
+        <span class="works__tags">// Fully AI // Lip Sync</span>
+      </a>
+    </li>
+    <li data-i="4" style="">
+      <a class="works__row" href="work/ppas/" data-open-work="ppas">
+        <span class="works__title"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 0v14M0 7h14M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.2"/></svg>PPAS</span>
+        <span class="works__tags">// AI Production // One-Take Shot</span>
+      </a>
+    </li>
+    <li data-i="5" style="">
+      <a class="works__row" href="work/kofola-phteven/" data-open-work="kofola-phteven">
+        <span class="works__title"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 0v14M0 7h14M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.2"/></svg>Kofola — Phteven</span>
+        <span class="works__tags">// Fully AI // Trained Character</span>
+      </a>
+    </li>
+    <li data-i="6" style="--accent:#111">
+      <a class="works__row" href="about/" data-open-work="studio">
+        <span class="works__title"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 0v14M0 7h14M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.2"/></svg>About me</span>
+        <span class="works__tags">// Who // How // Contact</span>
+      </a>
+    </li></ol>
+      <article class="work" id="work"><div class="work__fold"><div class="work__fold-in">
+      <div class="work__video"><iframe src="https://player.vimeo.com/video/1193051592?title=0&byline=0&portrait=0&dnt=1" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Monoprix — Commercial · fully AI"></iframe></div>
+      <div class="work__body">
+        
+    <p class="work__kicker">Fully AI · Commercial</p>
+    <h1 class="work__title">Monoprix</h1>
+    <div class="work__meta"><span><b>Client</b>Monoprix</span><span><b>Format</b>Commercial · fully AI</span><span><b>Produced for</b>Czech Video Center (Fameplay)</span></div>
+        <h2 class="work__h"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 0v14M0 7h14M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.2"/></svg>Idea</h2><p class="work__text">An exploration of Monoprix’s role as curator, taken to its logical extreme: a job interview in which Monoprix HR assesses a product’s suitability for its shelves. Every item must earn its place.</p>
+        <h2 class="work__h"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 0v14M0 7h14M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.2"/></svg>My role</h2><ul class="work__list"><li>Came up with the interview concept</li><li>Set the visual language of the spot</li><li>Defined the interior and the character’s look</li><li>Created the storyboard</li><li>Generated the image and video scenes</li><li>Managed communication and planning with the client from the first call to handover</li></ul>
+        <h2 class="work__h"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 0v14M0 7h14M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.2"/></svg>Result</h2><p class="work__text">YouTube campaign.</p>
+        <h2 class="work__h"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 0v14M0 7h14M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.2"/></svg>Tools</h2><ul class="chips"><li>Nano Banana Pro</li><li>Kling 3.0</li><li>DaVinci Resolve</li><li>ChatGPT</li><li>ElevenLabs</li></ul>
+        <p class="work__rights">Produced for Czech Video Center (Fameplay) as a freelancer. All rights belong to Czech Video Center a.s.</p>
+        <a class="work__next" href="work/raiffeisenbank-hybrid/" data-open-work="raiffeisenbank-hybrid"><span>Next</span><span>Raiffeisenbank Hybrid</span></a>
+      </div></div></div></article>
+    </div>
+    <button class="back" type="button" id="back">View Other Works</button>
+  </section>
+
+
+  <script type="module" src="assets/js/app.js?v=202610201342"></script>
+</body>
+</html>
