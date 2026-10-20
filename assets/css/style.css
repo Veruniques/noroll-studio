@@ -157,15 +157,13 @@ body.is-loaded .loader { opacity: 0; visibility: hidden; }
   filter: drop-shadow(0 1px 0 rgba(30, 10, 0, .55)) drop-shadow(0 8px 14px rgba(80, 20, 0, .25));
   transition: filter .6s ease;
 }
-/* heated chrome once the dog sets it alight */
+/* warm chrome while the title burns: no glow pulse, just the metal heating up */
 .side-label__text.is-burning {
   background: linear-gradient(180deg,
-    #fff6d6 0%, #ffd34a 22%, #ff8a1a 42%, #a62400 52%, #d84a00 60%, #ffb43a 76%, #fff1c2 90%, #ff7a14 100%);
+    #fff3e4 0%, #f3d2b4 20%, #b9886a 40%, #3a2018 52%, #6b3a26 60%, #e9b48e 76%, #fff1e2 88%, #a86d4c 100%);
   -webkit-background-clip: text; background-clip: text;
-  filter: drop-shadow(0 0 10px rgba(255, 220, 120, .9)) drop-shadow(0 0 26px rgba(255, 240, 200, .6));
-  animation: heat 1.6s ease-in-out infinite alternate;
+  filter: drop-shadow(0 1px 0 rgba(30, 10, 0, .5)) drop-shadow(0 4px 12px rgba(255, 87, 0, .28));
 }
-@keyframes heat { to { filter: drop-shadow(0 0 16px rgba(255, 230, 140, 1)) drop-shadow(0 0 34px rgba(255, 250, 220, .7)); } }
 .side-label::after {
   content: ''; position: absolute; left: 0; right: 0; bottom: -6px; height: 3px;
   background: var(--ink); transform: scaleX(0); transform-origin: left;

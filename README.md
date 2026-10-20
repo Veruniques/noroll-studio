@@ -47,7 +47,7 @@ CINEMATIC and ABOUT are chrome lettering (Michroma with a chrome gradient).
 Clicking CINEMATIC on the home view sets the title on fire; it keeps burning while you're in Cinematic.
 
 Opening a case from the site: the case arrives folded under a tab. The chrome fire dog
-(`assets/img/dog-run.webp`, keyed from a green-screen render, 63 frames, plays once) runs in from the right,
+(`assets/img/dog-run.webp`, keyed from a green-screen render, 86 frames, plays once) runs in from the right,
 sits on the tab, raises a paw and slams it down; the case unfolds on the slam. Any scroll, key or tap skips it.
 Direct visits (e.g. from Google) and reduced motion skip the dog and show the case open.
 Timings live in `DOG` at the top of `assets/js/fire.js`.

@@ -4,15 +4,15 @@
    `anchor`, lifts a paw and slams it down. onSlam fires on the slam (that's when the
    case unfolds). Returns cancel(); cancelling also fires onSlam, so content never stays folded. */
 
-// dog-run.webp: keyed from the green-screen render, 63 frames at 33 ms, plays once.
+// dog-run.webp: keyed from the green-screen render, 86 frames at 33 ms, plays once.
 const DOG = {
   src: new URL('../img/dog-run.webp', import.meta.url).href,
-  ratio: 602 / 400,   // width / height
-  pawX: 0.158,        // where the slamming paw lands, as a share of the image width
+  ratio: 606 / 400,   // width / height
+  pawX: 0.167,        // where the slamming paw lands, as a share of the image width
   floor: 0.981,       // where the paws touch the ground, as a share of the image height
   run: 600,           // ms the dog is still running in
-  slam: 1716,         // ms until the paw hits
-  end: 2079,          // ms, last frame
+  slam: 1683,         // ms until the paw hits
+  end: 2838,          // ms, last frame (paw back down, dog settled)
 };
 
 const ease = { out: t => 1 - Math.pow(1 - t, 3) };
@@ -51,7 +51,7 @@ export function igniteTitle(el) {
   const { pts, rect } = maskPoints(el);
   if (!pts.length) return;
   const H = rect.height;
-  const pad = H * 1.6;                                   // room above the letters for the flames
+  const pad = H * 1.1;                                   // room above the letters for the flames
   const c = document.createElement('canvas');
   c.className = 'fire-canvas';
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -62,55 +62,49 @@ export function igniteTitle(el) {
   const ctx = c.getContext('2d');
   ctx.scale(dpr, dpr);
 
-  // bias spawn points toward the upper half of each letter
-  const top = pts.filter(([, y]) => y < H * 0.42);
-  const parts = [];
+  // flames grow from the top edge of each letter: one point per column of pixels
+  const topOf = new Map();
+  for (const [x, y] of pts) if (!topOf.has(x) || y < topOf.get(x)) topOf.set(x, y);
+  const tops = [...topOf.entries()];
+  const tongues = [];
   let last = performance.now(), born = last, raf = 0;
-  const S = H / 60;                                      // scale with the title size
 
+  // calm, graphic tongues: few at a time, slow, slim, brand orange
   function frame(now) {
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
     const age = (now - born) / 1000;
-    // a burst when the dog lands, then a steady burn
-    const rate = age < 0.5 ? 1100 : 520;
-    let spawn = rate * dt;
-    while (spawn-- > 0) {
-      const src = Math.random() < 0.94 ? top : pts;
-      const [px, py] = src[(Math.random() * src.length) | 0];
-      parts.push({
-        x: px + H / 2, y: py + pad,
-        vx: (Math.random() - 0.5) * 18 * S,
-        vy: -(70 + Math.random() * 120) * S * (age < 0.5 ? 1.4 : 1),
-        life: 0, max: 0.4 + Math.random() * 0.55,
-        r: (6 + Math.random() * 10) * S,
+    const rate = 30 * Math.min(1, age / 0.8);            // eases in, no burst
+    if (Math.random() < rate * dt) {
+      const [px, py] = tops[(Math.random() * tops.length) | 0];
+      tongues.push({
+        x: px + H / 2, y: py + pad + H * 0.04,
+        life: 0, max: 1.1 + Math.random() * 0.9,
+        hMax: H * (0.35 + Math.random() * 0.5),
+        wd: H * (0.07 + Math.random() * 0.06),
         seed: Math.random() * 6.28,
       });
     }
     ctx.clearRect(0, 0, w, h);
-    ctx.globalCompositeOperation = 'lighter';
-    for (let i = parts.length - 1; i >= 0; i--) {
-      const p = parts[i];
-      p.life += dt;
-      const k = p.life / p.max;
-      if (k >= 1) { parts.splice(i, 1); continue; }
-      const sway = Math.sin(now / 140 + p.seed + p.y * 0.04) * 22 * S;
-      p.x += (p.vx + sway) * dt;
-      p.y += p.vy * dt;
-      p.vy *= 1.01;                                      // flames accelerate upward
-      const rad = p.r * (1 - k * 0.75);
-      // white-hot core → yellow → orange → deep red tips, readable on the orange page
-      const col = k < 0.2 ? [255, 252, 230] : k < 0.45 ? [255, 222, 90] : k < 0.7 ? [255, 140, 20] : [170, 20, 0];
-      const a = (k < 0.12 ? k / 0.12 : 1 - (k - 0.12) / 0.88) * 0.4;
-      ctx.save();
-      ctx.translate(p.x, p.y);
-      ctx.scale(1, 1.9 + k * 1.2);                       // tongues, not dots
-      const g = ctx.createRadialGradient(0, 0, 0, 0, 0, rad);
-      g.addColorStop(0, `rgba(${col[0]},${col[1]},${col[2]},${a})`);
-      g.addColorStop(0.55, `rgba(${col[0]},${col[1]},${col[2]},${a * 0.45})`);
-      g.addColorStop(1, `rgba(${col[0]},${col[1]},${col[2]},0)`);
+    for (let i = tongues.length - 1; i >= 0; i--) {
+      const t = tongues[i];
+      t.life += dt;
+      const k = t.life / t.max;
+      if (k >= 1) { tongues.splice(i, 1); continue; }
+      const grow = Math.sin(Math.PI * k);                // rise, then sink back
+      const th = t.hMax * grow;
+      const tw = t.wd * (0.6 + 0.4 * grow);
+      const lean = Math.sin(now / 520 + t.seed) * H * 0.07 * grow;
+      const g = ctx.createLinearGradient(0, t.y, 0, t.y - th);
+      g.addColorStop(0, 'rgba(255, 196, 92, .85)');
+      g.addColorStop(0.45, 'rgba(255, 87, 0, .75)');
+      g.addColorStop(1, 'rgba(196, 30, 0, 0)');
       ctx.fillStyle = g;
-      ctx.beginPath(); ctx.arc(0, 0, rad, 0, Math.PI * 2); ctx.fill();
-      ctx.restore();
+      ctx.beginPath();
+      ctx.moveTo(t.x - tw / 2, t.y);
+      ctx.quadraticCurveTo(t.x - tw / 2, t.y - th * 0.55, t.x + lean, t.y - th);
+      ctx.quadraticCurveTo(t.x + tw / 2, t.y - th * 0.55, t.x + tw / 2, t.y);
+      ctx.closePath();
+      ctx.fill();
     }
     raf = requestAnimationFrame(frame);
   }
