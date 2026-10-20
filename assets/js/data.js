@@ -1,11 +1,11 @@
 /* =====================================================================
-   NO ROLL STUDIO — content. Edit text, videos and images here.
+   NO ROLL — content. Edit text, videos and images here.
    cinematic[]: Vimeo videos (left side of the site)
    design[]:    visual / brand work (right side)
    ===================================================================== */
 
 export const STUDIO = {
-  name: 'NO ROLL studio',
+  name: 'NO ROLL',
   domain: 'noroll.studio',
   tagline: 'AI film & campaign director. Made right on the first roll.',
   email: 'hello@noroll.studio', // TODO: confirm address

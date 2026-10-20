@@ -1,4 +1,4 @@
-/* The roll — a tape printed with the studio's work.
+/* The roll — a tape printed with the work.
    It rolls after the cursor and lays the tape down on the floor, frame by frame.
    Drag to orbit the camera (always on), scroll to zoom, [Space] rewinds the tape. */
 import * as THREE from 'three';

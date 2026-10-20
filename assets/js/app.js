@@ -1,5 +1,5 @@
-import { STUDIO, cinematic, design, info } from './data.js?v=20261020b';
-import { runDogOnto, extinguish } from './fire.js?v=20261020b';
+import { STUDIO, cinematic, design, info } from './data.js?v=20261020c';
+import { runDogOnto, extinguish } from './fire.js?v=20261020c';
 
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
