@@ -118,9 +118,8 @@ export const cinematic = [
       'Kept the parrot character consistent',
       'Created the static images for the one-take scene',
       'Turned the stills into the video scene',
-      'Not mine: the final map scene',
     ],
-    tools: [],
+    tools: ['Kling 3.0'],
   },
 ];
 

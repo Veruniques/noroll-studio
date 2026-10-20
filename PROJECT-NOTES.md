@@ -59,7 +59,6 @@ assets/img/og.jpg       social share image
   Also per work: `format` (shown as Format), `role[]` (shown as "My role" list), `tools[]` (shown as chips).
   Empty `role` / `tools` arrays hide that section.
   Currently: Raiffeisenbank Cinema Spot, Monoprix, Raiffeisenbank Hybrid, Fameplay, Kofola — Phteven, PPAS.
-  Missing details: PPAS has no tools listed yet.
 - `design[]` — visual work: `id`, `title`, `client`, `tags`, `cover`, `text`, `images[]` (stacked full-width on the detail page).
   Currently: Fameplay, Kurník Šopa, Beyond PEAQ.
 - `info` — the Studio Info page: `intro[]` paragraphs, `services[]`, `tools[]`, `portrait`.
