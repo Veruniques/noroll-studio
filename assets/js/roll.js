@@ -4,7 +4,8 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-const BG = 0xff5700;
+// floor colour follows the page background (--bg in style.css)
+const BG = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim() || '#ece9e3';
 const W = 1.6;                 // tape width (= roll width)
 const R = 2.16;                // outer radius; circumference ≈ one full set of frames
 const R_IN = 1.36, R_CORE = 1.28;

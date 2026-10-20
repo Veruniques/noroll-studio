@@ -1,6 +1,6 @@
-import { STUDIO, cinematic, design, info } from './data.js?v=202610201412';
-import { igniteTitle, extinguish, dogStamp, preloadDog } from './fire.js?v=202610201412';
-import { esc, pad, listHTML, workHTML, pathFor, pageMeta } from './render.js?v=202610201412';
+import { STUDIO, cinematic, design, info } from './data.js?v=202610201432';
+import { igniteTitle, extinguish, dogStamp, preloadDog } from './fire.js?v=202610201432';
+import { esc, pad, listHTML, workHTML, pathFor, pageMeta } from './render.js?v=202610201432';
 
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
