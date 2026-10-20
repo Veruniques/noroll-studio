@@ -38,7 +38,7 @@ export function workHTML(w, { index, next, side, studio, folded = false }) {
   if (w.kind === 'cinematic') {
     const meta = `<span><b>Client</b>${esc(w.client)}</span>${w.format ? `<span><b>Format</b>${esc(w.format)}</span>` : ''}${w.producedFor ? `<span><b>Produced for</b>${esc(w.producedFor)}</span>` : `<span><b>Director</b>${esc(studio.director)}</span>`}`;
     const content = `
-      <div class="work__video"><iframe src="https://player.vimeo.com/video/${w.vimeo}?title=0&byline=0&portrait=0&dnt=1" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="${esc(w.title)} — ${esc(w.format || 'AI film')}"></iframe></div>
+      <div class="work__video"><iframe src="https://player.vimeo.com/video/${w.vimeo}?title=0&byline=0&portrait=0&dnt=1" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="${esc(w.title)} — ${esc(w.format || 'AI commercial')}"></iframe></div>
       <div class="work__body">
         ${head(w.tags.join(' · '), w.title, meta)}
         ${w.idea ? section('Idea', `<p class="work__text">${esc(w.idea)}</p>`) : section('About', `<p class="work__text">${esc(w.text)}</p>`)}
@@ -77,7 +77,7 @@ export function workHTML(w, { index, next, side, studio, folded = false }) {
         <a href="mailto:${esc(studio.email)}"><span>Email</span><span>${esc(studio.email)}</span></a>
         <a href="${esc(studio.linkedin)}" target="_blank" rel="noopener"><span>LinkedIn</span><span>${esc(studio.director)} ↗</span></a>
       </div>`)}
-      <img class="work__portrait" src="${esc(w.portrait)}" alt="${esc(studio.director)}, AI film and campaign director" loading="lazy">
+      <img class="work__portrait" src="${esc(w.portrait)}" alt="${esc(studio.director)}, multidisciplinary creative" loading="lazy">
       ${nextBtn}
     </div>`;
 }
@@ -92,22 +92,22 @@ export function pageMeta({ view, w, studio, cinematic }) {
     '@type': 'Person',
     '@id': `${root}#person`,
     name: NAME,
-    jobTitle: 'AI Film & Campaign Director',
+    jobTitle: 'Multidisciplinary Creative',
     description: 'Concept & Audiovisual Director creating AI-driven video campaigns and commercials for cinema, TV and YouTube.',
     url: root,
     email: `mailto:${studio.email}`,
     image: `${root}assets/img/og.jpg`,
     sameAs: [studio.linkedin],
     address: { '@type': 'PostalAddress', addressCountry: 'CZ' },
-    knowsAbout: ['AI video production', 'AI commercials', 'Creative direction', 'Hybrid live action and AI production', 'Storyboarding', 'Generative AI film'],
+    knowsAbout: ['AI video production', 'AI commercials', 'Creative direction', 'Hybrid live action and AI production', 'Storyboarding', 'Campaign concepts', 'Art direction'],
   };
   const site = { '@type': 'WebSite', '@id': `${root}#website`, url: root, name: `${NAME} — NO ROLL`, inLanguage: 'en', publisher: { '@id': `${root}#person` } };
 
   if (w && w.kind === 'cinematic') {
     const url = `${root}work/${w.id}/`;
-    const desc = clip(`${w.title}: ${(w.idea || w.text)} AI film directed by ${NAME}.`);
+    const desc = clip(`${w.title}: ${(w.idea || w.text)} Concept and direction by ${NAME}.`);
     return {
-      title: `${w.title} — ${w.format ? w.format.replace(' · ', ', ') : 'AI film'} | ${NAME}`,
+      title: `${w.title} — ${w.format ? w.format.replace(' · ', ', ') : 'AI commercial'} | ${NAME}`,
       description: desc,
       url,
       image: w.thumb || `${root}assets/img/og.jpg`,
@@ -130,7 +130,7 @@ export function pageMeta({ view, w, studio, cinematic }) {
   if (w && w.kind === 'info') {
     const url = `${root}about/`;
     return {
-      title: `About — ${NAME}, AI film & campaign director`,
+      title: `About — ${NAME}, multidisciplinary creative`,
       description: clip(`${w.lead} ${w.intro[0]}`),
       url, image: `${root}assets/img/og.jpg`, type: 'profile',
       jsonld: [person, site, { '@type': 'ProfilePage', url, mainEntity: { '@id': `${root}#person` } }, breadcrumbs(root, [['About', url]])],
@@ -139,8 +139,8 @@ export function pageMeta({ view, w, studio, cinematic }) {
   if (view === 'cinematic') {
     const url = `${root}cinematic/`;
     return {
-      title: `AI commercials & films — Cinematic works | ${NAME}`,
-      description: clip(`AI commercials and films directed by ${NAME}: ${cinematic.map(c => c.title).join(', ')}. Fully AI and hybrid live-action productions for cinema, TV and YouTube.`),
+      title: `Cinematic works — AI commercials & campaigns | ${NAME}`,
+      description: clip(`AI commercials and campaigns by ${NAME}: ${cinematic.map(c => c.title).join(', ')}. Fully AI and hybrid live-action productions for cinema, TV and YouTube.`),
       url, image: `${root}assets/img/og.jpg`, type: 'website',
       jsonld: [person, site, {
         '@type': 'CollectionPage', url, name: 'Cinematic works',
@@ -149,8 +149,8 @@ export function pageMeta({ view, w, studio, cinematic }) {
     };
   }
   return {
-    title: `${NAME} — AI film & campaign director | NO ROLL`,
-    description: `${NAME} is an AI film and campaign director: concept, storyboard and AI-driven production of commercials for cinema, TV and YouTube. Raiffeisenbank, Monoprix, Kofola, PPAS.`,
+    title: `${NAME} — Multidisciplinary creative | NO ROLL`,
+    description: `${NAME} is a multidisciplinary creative: concept, creative direction and AI-driven video campaigns and commercials for cinema, TV and YouTube. Raiffeisenbank, Monoprix, Kofola, PPAS.`,
     url: root, image: `${root}assets/img/og.jpg`, type: 'website',
     jsonld: [person, site],
   };

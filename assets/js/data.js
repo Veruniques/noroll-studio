@@ -7,7 +7,7 @@
 export const STUDIO = {
   name: 'NO ROLL',
   domain: 'noroll.studio',
-  tagline: 'AI film & campaign director. Made right on the first roll.',
+  tagline: 'Multidisciplinary creative. Made right on the first roll.',
   email: 'veronikadominikova@gmail.com',
   linkedin: 'https://www.linkedin.com/in/veronika-dominikova/',
   director: 'Veronika Dominiková',
@@ -201,7 +201,7 @@ export const info = {
   id: 'studio',
   title: 'About me',
   tags: ['Who', 'How', 'Contact'],
-  role: 'Concept & Audiovisual Director',
+  role: 'Multidisciplinary Creative',
   lead: 'From napkin sketch to TV-ready master. On the first roll.',
   intro: [
     'I work with brands that have something to say but want to bypass the friction of traditional production. As a Concept & Audiovisual Director, I design the creative strategy and transform it into high-impact video campaigns using advanced AI workflows. I don’t just generate images; I direct coherent cinematic stories with precision, rhythm, and emotion.',
@@ -210,7 +210,7 @@ export const info = {
     'Larger productions run with editors, voice directors and partner agencies, credited where they shaped the work.',
   ],
   services: [
-    'AI film & commercial direction',
+    'Commercial & campaign direction',
     'Hybrid production (live action + AI)',
     'Campaign concepts',
     'Creative & art direction',

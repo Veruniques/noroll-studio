@@ -1,6 +1,6 @@
 # noroll-studio
 
-Portfolio of Veronika Dominiková, AI film & campaign director. NO ROLL is the method / label.
+Portfolio of Veronika Dominiková, multidisciplinary creative. NO ROLL is the method / label.
 Layout modelled on laxspace.co — a 3D tape roll printed with the work follows the cursor around an orange (#FF5700) floor
 and lays the tape down frame by frame. A works column opens in the middle, with a film strip on the side you open.
 
