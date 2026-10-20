@@ -147,3 +147,4 @@ Open http://localhost:8000. It needs internet for Three.js, Google Fonts and Vim
 - Site now leads with Veronika Dominiková as AI film & campaign director; NO ROLL is the method/label, not a studio ("I", not "we").
 - Right side label on the home screen is **About** (opens the About me page, id `studio`). Design is no longer in the navigation; its data and `?view=design` route still exist.
 - About me services narrowed to film and campaign work (no identity, no web).
+- Cache-busting: bump the `?v=` value in index.html (css + app.js) and in app.js imports (data.js, fire.js) whenever content changes, or browsers keep serving the old JS.
