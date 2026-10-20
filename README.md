@@ -41,10 +41,10 @@ Images go in `assets/img/work/` (JPG, ~1600 px wide).
   JSON-LD (Person, WebSite, VideoObject per case, BreadcrumbList, ProfilePage).
 - `sitemap.xml` lists all pages. Submit it in Google Search Console.
 
-## Fire and the fire dog
+## Titles and the fire dog
 
 CINEMATIC and ABOUT are chrome lettering (Michroma with a chrome gradient).
-Clicking CINEMATIC on the home view sets the title on fire; it keeps burning while you're in Cinematic.
+The title of the section you are in (CINEMATIC or ABOUT) turns orange (`--accent`).
 
 Opening a case from the site: the case arrives folded under a tab. The chrome fire dog
 (`assets/img/dog-run.webp`, keyed from a green-screen render, 86 frames, plays once) runs in from the right,

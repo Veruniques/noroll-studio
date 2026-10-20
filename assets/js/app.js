@@ -1,6 +1,6 @@
-import { STUDIO, cinematic, design, info } from './data.js?v=202610201447';
-import { igniteTitle, extinguish, dogStamp, preloadDog } from './fire.js?v=202610201447';
-import { esc, pad, listHTML, workHTML, pathFor, pageMeta } from './render.js?v=202610201447';
+import { STUDIO, cinematic, design, info } from './data.js?v=202610201450';
+import { dogStamp, preloadDog } from './fire.js?v=202610201450';
+import { esc, pad, listHTML, workHTML, pathFor, pageMeta } from './render.js?v=202610201450';
 
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
@@ -33,7 +33,7 @@ const rollCards = cinematic.flatMap((w, i) => [
   { id: w.id, title: w.title, tags: w.tags, kind: 'cinematic' },
   { ...designFrames[i], kind: 'design' },
 ]);
-import('./roll.js?v=202610201447')
+import('./roll.js?v=202610201450')
   .then(({ createRoll }) => {
     roll = createRoll($('#scene'), {
       cards: rollCards,
@@ -226,7 +226,8 @@ function readRawURL() {
 function apply({ view, work: id }, { fromNav } = {}) {
   cancelStamp();
   document.body.dataset.view = view;
-  if (view !== 'cinematic') extinguish();          // the fire only burns while you're in Cinematic
+  // which bottom title is lit (orange): Cinematic for the works, About for the about page
+  document.body.dataset.page = view === 'home' ? 'home' : id === 'studio' ? 'about' : 'cinematic';
   roll && roll.setMode(view);
   if (view === 'home') {
     setMeta('home');
@@ -265,10 +266,6 @@ document.addEventListener('click', e => {
   const nav = e.target.closest('[data-nav]');
   if (nav) {
     e.preventDefault();
-    // the Cinematic title catches fire and keeps burning while you're in Cinematic
-    if (nav.matches('.side-label--left') && document.body.dataset.view === 'home') {
-      igniteTitle(nav.querySelector('.side-label__text') || nav);
-    }
     go(nav.dataset.nav);
     return;
   }

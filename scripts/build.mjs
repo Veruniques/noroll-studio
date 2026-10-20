@@ -31,6 +31,7 @@ function page({ out, base, view, w = null, robots = 'index, follow, max-image-pr
     .replaceAll('{{ROBOTS}}', robots)
     .replaceAll('{{JSONLD}}', jsonLdScript(meta))
     .replaceAll('{{VIEW}}', view)
+    .replaceAll('{{PAGE}}', view === 'home' ? 'home' : w && w.kind === 'info' ? 'about' : 'cinematic')
     .replaceAll('{{HERO_TAG}}', view === 'home' ? 'h1' : 'p')
     .replaceAll('{{COLUMN_CLASS}}', view === 'home' ? 'column' : `column is-open${detail ? ' is-detail' : ''}`)
     .replaceAll('{{COLUMN_HIDDEN}}', view === 'home' ? ' hidden' : '')

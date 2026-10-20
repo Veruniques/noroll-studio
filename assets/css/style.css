@@ -1,6 +1,7 @@
 /* NO ROLL --------------------------------------------------------- */
 :root {
-  --bg: #ece9e3;        /* light warm paper; orange (#ff5700) stays as the accent: fire, dog */
+  --accent: #ff5700;
+  --bg: #ece9e3;        /* light warm paper; orange (--accent) marks the active title */
   --ink: #111;
   --ink-2: #555;
   --row: #cdcdcd;
@@ -157,12 +158,12 @@ body.is-loaded .loader { opacity: 0; visibility: hidden; }
   filter: drop-shadow(0 1px 0 rgba(30, 10, 0, .55)) drop-shadow(0 8px 14px rgba(80, 20, 0, .25));
   transition: filter .6s ease;
 }
-/* warm chrome while the title burns: no glow pulse, just the metal heating up */
-.side-label__text.is-burning {
-  background: linear-gradient(180deg,
-    #fff3e4 0%, #f3d2b4 20%, #b9886a 40%, #3a2018 52%, #6b3a26 60%, #e9b48e 76%, #fff1e2 88%, #a86d4c 100%);
-  -webkit-background-clip: text; background-clip: text;
-  filter: drop-shadow(0 1px 0 rgba(30, 10, 0, .5)) drop-shadow(0 4px 12px rgba(255, 87, 0, .28));
+/* the title of the section you're in turns orange */
+body[data-page="cinematic"] .side-label--left .side-label__text,
+body[data-page="about"] .side-label--right .side-label__text {
+  background: none;
+  color: var(--accent);
+  filter: none;
 }
 .side-label::after {
   content: ''; position: absolute; left: 0; right: 0; bottom: -6px; height: 3px;
@@ -170,8 +171,10 @@ body.is-loaded .loader { opacity: 0; visibility: hidden; }
   transition: transform .5s var(--ease);
 }
 .side-label:hover::after,
-body[data-view="cinematic"] .side-label--left::after,
-body[data-view="design"] .side-label--right::after { transform: scaleX(1); }
+body[data-page="cinematic"] .side-label--left::after,
+body[data-page="about"] .side-label--right::after { transform: scaleX(1); }
+body[data-page="cinematic"] .side-label--left::after,
+body[data-page="about"] .side-label--right::after { background: var(--accent); }
 .side-label--right::after { transform-origin: right; }
 
 /* ---------- the fire dog ---------- */
@@ -182,12 +185,6 @@ body[data-view="design"] .side-label--right::after { transform: scaleX(1); }
   filter: drop-shadow(0 8px 10px rgba(0, 0, 0, .35));
   will-change: transform;
 }
-.fire-canvas {
-  position: fixed; z-index: 26;
-  pointer-events: none;
-  transition: opacity .6s ease;
-}
-body:not([data-view="home"]) .fire-canvas { z-index: 6; }
 .view-works {
   flex: 1;
   height: 38px;
@@ -475,7 +472,4 @@ body[data-view="design"] .strip--design { opacity: 1; transform: none; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
-}
-@media (max-width: 820px) {
-  body:not([data-view="home"]) .fire-canvas { opacity: 0; }
 }
