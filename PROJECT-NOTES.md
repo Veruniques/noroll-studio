@@ -5,7 +5,7 @@ Handoff doc for picking this up later. Status as of 16 Oct 2026.
 ## What this is
 
 The studio site for **NO ROLL studio**: AI cinematic production + visual design.
-Separate from `noroll.studio`, which stays Veru's personal portfolio (repo `Veruniques/no-roll-studio`).
+Live on `noroll.studio` since 3 Nov 2026 (replaced the old portfolio, repo `Veruniques/personal-portfolio`).
 
 - **Repo:** `github.com/Veruniques/noroll-studio`, branch `main`
 - **Stack:** plain HTML / CSS / JS (ES modules), no build step. Three.js 0.160 from jsDelivr.
@@ -24,7 +24,7 @@ Separate from `noroll.studio`, which stays Veru's personal portfolio (repo `Veru
 
 **Not live yet**
 - The repo is **private** and GitHub Pages is **off**. To publish: make the repo public (or use a paid GitHub plan), then go to Settings → Pages → Deploy from branch → `main` / root. It will be at `veruniques.github.io/noroll-studio/`.
-- No custom domain set. noroll.studio stays the personal site; pick a new domain for the studio and add a `CNAME` file when ready.
+- Custom domain `noroll.studio` is set (CNAME file + Settings → Pages).
 
 **Open items / ideas**
 - [ ] **Contact email** `hello@noroll.studio` is a placeholder carried over from the old site. Confirm it in `assets/js/data.js` → `STUDIO.email`.

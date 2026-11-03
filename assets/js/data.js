@@ -13,7 +13,7 @@ export const STUDIO = {
   director: 'Veronika Dominiková',
   // canonical address of the site (used for SEO: canonical links, sitemap, structured data).
   // Change this one line when the site moves to its own domain, then run `node scripts/build.mjs`.
-  url: 'https://veruniques.github.io/noroll-studio/',
+  url: 'https://noroll.studio/',
 };
 
 // Work made as a freelancer under Czech Video Center (Fameplay): credit + rights notice on the work page

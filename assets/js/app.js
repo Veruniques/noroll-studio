@@ -1,6 +1,6 @@
-import { STUDIO, cinematic, design, info } from './data.js?v=202610201450';
-import { dogStamp, preloadDog } from './fire.js?v=202610201450';
-import { esc, pad, listHTML, workHTML, pathFor, pageMeta } from './render.js?v=202610201450';
+import { STUDIO, cinematic, design, info } from './data.js?v=202611031427';
+import { dogStamp, preloadDog } from './fire.js?v=202611031427';
+import { esc, pad, listHTML, workHTML, pathFor, pageMeta } from './render.js?v=202611031427';
 
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
@@ -33,7 +33,7 @@ const rollCards = cinematic.flatMap((w, i) => [
   { id: w.id, title: w.title, tags: w.tags, kind: 'cinematic' },
   { ...designFrames[i], kind: 'design' },
 ]);
-import('./roll.js?v=202610201450')
+import('./roll.js?v=202611031427')
   .then(({ createRoll }) => {
     roll = createRoll($('#scene'), {
       cards: rollCards,
