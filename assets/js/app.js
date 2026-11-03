@@ -1,6 +1,6 @@
-import { STUDIO, cinematic, design, info } from './data.js?v=202611031530';
-import { dogStamp, preloadDog } from './fire.js?v=202611031530';
-import { esc, pad, listHTML, workHTML, pathFor, pageMeta } from './render.js?v=202611031530';
+import { STUDIO, cinematic, design, info } from './data.js?v=202611031556';
+import { dogStamp, preloadDog } from './fire.js?v=202611031556';
+import { esc, pad, listHTML, workHTML, pathFor, pageMeta } from './render.js?v=202611031556';
 
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
@@ -33,7 +33,7 @@ const rollCards = cinematic.flatMap((w, i) => [
   { id: w.id, title: w.title, tags: w.tags, kind: 'cinematic' },
   { ...designFrames[i], kind: 'design' },
 ]);
-import('./roll.js?v=202611031530')
+import('./roll.js?v=202611031556')
   .then(({ createRoll }) => {
     roll = createRoll($('#scene'), {
       cards: rollCards,
@@ -278,14 +278,13 @@ contactForm.addEventListener('submit', async e => {
   contactStatus.classList.remove('is-error');
   try {
     const data = Object.fromEntries(new FormData(contactForm));
-    data._replyto = data.email;
-    const res = await fetch('https://formsubmit.co/ajax/' + STUDIO.email, {
+    const res = await fetch('https://api.web3forms.com/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
       body: JSON.stringify(data),
     });
     const out = await res.json();
-    if (!res.ok || String(out.success) !== 'true') throw new Error(out.message || 'send failed');
+    if (!res.ok || !out.success) throw new Error(out.message || 'send failed');
     contactForm.reset();
     contactStatus.textContent = "Sent. I'll get back to you.";
   } catch (err) {
