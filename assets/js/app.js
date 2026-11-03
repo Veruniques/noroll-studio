@@ -1,6 +1,6 @@
-import { STUDIO, cinematic, design, info } from './data.js?v=202611031427';
-import { dogStamp, preloadDog } from './fire.js?v=202611031427';
-import { esc, pad, listHTML, workHTML, pathFor, pageMeta } from './render.js?v=202611031427';
+import { STUDIO, cinematic, design, info } from './data.js?v=202611031530';
+import { dogStamp, preloadDog } from './fire.js?v=202611031530';
+import { esc, pad, listHTML, workHTML, pathFor, pageMeta } from './render.js?v=202611031530';
 
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
@@ -33,7 +33,7 @@ const rollCards = cinematic.flatMap((w, i) => [
   { id: w.id, title: w.title, tags: w.tags, kind: 'cinematic' },
   { ...designFrames[i], kind: 'design' },
 ]);
-import('./roll.js?v=202611031427')
+import('./roll.js?v=202611031530')
   .then(({ createRoll }) => {
     roll = createRoll($('#scene'), {
       cards: rollCards,
@@ -262,7 +262,49 @@ function go(view, id = null) {
 
 window.addEventListener('popstate', () => apply(readURL()));
 
+/* ---------------- contact form ---------------- */
+const contact = $('#contact');
+const contactForm = $('#contact-form');
+const contactStatus = $('#contact-status');
+contact.addEventListener('click', e => {
+  if (e.target === contact || e.target.closest('[data-contact-close]')) contact.close();
+});
+contactForm.addEventListener('submit', async e => {
+  e.preventDefault();
+  const send = $('.contact__send', contactForm);
+  send.disabled = true;
+  send.textContent = 'Sending…';
+  contactStatus.textContent = '';
+  contactStatus.classList.remove('is-error');
+  try {
+    const data = Object.fromEntries(new FormData(contactForm));
+    data._replyto = data.email;
+    const res = await fetch('https://formsubmit.co/ajax/' + STUDIO.email, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify(data),
+    });
+    const out = await res.json();
+    if (!res.ok || String(out.success) !== 'true') throw new Error(out.message || 'send failed');
+    contactForm.reset();
+    contactStatus.textContent = "Sent. I'll get back to you.";
+  } catch (err) {
+    console.warn('contact form', err);
+    contactStatus.classList.add('is-error');
+    contactStatus.innerHTML = `That didn't go through. Write to <a href="mailto:${STUDIO.email}">${STUDIO.email}</a>.`;
+  } finally {
+    send.disabled = false;
+    send.textContent = 'Send';
+  }
+});
+
 document.addEventListener('click', e => {
+  const cta = e.target.closest('[data-contact]');
+  if (cta) {
+    e.preventDefault();
+    contact.showModal();
+    return;
+  }
   const nav = e.target.closest('[data-nav]');
   if (nav) {
     e.preventDefault();
@@ -287,6 +329,7 @@ document.addEventListener('click', e => {
 $('#back').addEventListener('click', () => go(document.body.dataset.view));
 
 document.addEventListener('keydown', e => {
+  if (contact.open) return; // the dialog handles its own keys
   const view = document.body.dataset.view;
   if (e.key === 'Escape' && view !== 'home') {
     if (col.classList.contains('is-detail')) go(view); else go('home');

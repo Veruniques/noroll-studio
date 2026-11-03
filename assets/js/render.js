@@ -74,6 +74,7 @@ export function workHTML(w, { index, next, side, studio, folded = false }) {
       ${section('What I do', `<ul class="chips">${w.services.map(s => `<li>${esc(s)}</li>`).join('')}</ul>`)}
       ${section('Pipeline', `<ul class="chips">${w.tools.map(s => `<li>${esc(s)}</li>`).join('')}</ul>`)}
       ${section('Contact', `<div class="work__contact">
+        <a href="mailto:${esc(studio.email)}" data-contact><span>Contact me</span><span>Write a message →</span></a>
         <a href="mailto:${esc(studio.email)}"><span>Email</span><span>${esc(studio.email)}</span></a>
         <a href="${esc(studio.linkedin)}" target="_blank" rel="noopener"><span>LinkedIn</span><span>${esc(studio.director)} ↗</span></a>
       </div>`)}

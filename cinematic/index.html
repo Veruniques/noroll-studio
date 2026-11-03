@@ -26,7 +26,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://player.vimeo.com">
   <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@200;300;400;500;600;900&family=Michroma&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css?v=202611031427">
+  <link rel="stylesheet" href="assets/css/style.css?v=202611031530">
   <script type="importmap">
     { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
                    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }
@@ -51,6 +51,8 @@
   <dl class="hud" aria-label="Scene controls">
     <div><dt id="hud-rewind-label">Rewind</dt><dd><button type="button" data-key="rewind">[Space]</button></dd></div>
   </dl>
+
+  <a class="cta" href="mailto:veronikadominikova@gmail.com" data-contact>Contact me</a>
 
   <a class="now-playing" href="work/raiffeisenbank-cinema-spot/" data-open-work="raiffeisenbank-cinema-spot" aria-label="Open Raiffeisenbank Cinema Spot">
     <span class="now-playing__label">Now Playing</span>
@@ -125,7 +127,26 @@
     <button class="back" type="button" id="back">View Other Works</button>
   </section>
 
+  <dialog class="contact" id="contact" aria-labelledby="contact-title">
+    <button class="contact__close" type="button" data-contact-close aria-label="Close">
+      <svg viewBox="0 0 24 24" width="24" height="24"><path d="M3 3l18 18M21 3L3 21" stroke="currentColor" stroke-width="1.2" fill="none"/></svg>
+    </button>
+    <h2 class="contact__title" id="contact-title">Roll with me.</h2>
+    <form class="contact__form" id="contact-form" action="https://formsubmit.co/veronikadominikova@gmail.com" method="POST">
+      <label>Name<input name="name" type="text" autocomplete="name" required maxlength="120"></label>
+      <label>Email<input name="email" type="email" autocomplete="email" required maxlength="200"></label>
+      <label>Message<textarea name="message" rows="5" required maxlength="5000"></textarea></label>
+      <input class="contact__trap" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <input type="hidden" name="_subject" value="noroll.studio: new message">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_captcha" value="false">
+      <button class="contact__send" type="submit">Send</button>
+      <p class="contact__status" id="contact-status" role="status" aria-live="polite"></p>
+      <p class="contact__note">Delivered to my inbox through FormSubmit. Used only to reply to you.</p>
+    </form>
+  </dialog>
 
-  <script type="module" src="assets/js/app.js?v=202611031427"></script>
+
+  <script type="module" src="assets/js/app.js?v=202611031530"></script>
 </body>
 </html>
