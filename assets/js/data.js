@@ -206,7 +206,7 @@ export const info = {
   intro: [
     'I work with brands that have something to say but want to bypass the friction of traditional production. As a Concept & Audiovisual Director, I design the creative strategy and transform it into high-impact video campaigns using advanced AI workflows. I don’t just generate images; I direct coherent cinematic stories with precision, rhythm, and emotion.',
     'I joined the team behind the first Emmy Award in Czech history, the original series #marty_is_dead, as AI Creative Lead. Since then: a sponsor spot for the cinema screen, commercials for Raiffeisenbank, Monoprix, Fameplay, PPAS and Kofola, and hybrid productions combining live action and AI.',
-    'Before that, years in product and leadership: design team lead at Kiwi.com, COO and CMO roles. Which is why the work starts with the brief and ends with a result, not with a pretty frame.',
+    'Before that, years in product and leadership: design team lead at Kiwi.com, brand lead and co-founder. Which is why the work starts with the brief and ends with a result, not with a pretty frame.',
     'Larger productions run with editors, voice directors and partner agencies, credited where they shaped the work.',
   ],
   services: [
