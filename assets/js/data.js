@@ -43,7 +43,7 @@ export const cinematic = [
       'Generated the input images and video scenes',
       'Built the full cut for the final editor to finish with SFX and colour grading',
     ],
-    tools: ['Freepik', 'Nano Banana Pro', 'Kling 2.1', 'DaVinci Resolve', 'ChatGPT (prompts)', 'ElevenLabs'],
+    tools: ['Higgsfield', 'Freepik', 'Nano Banana Pro', 'Kling 2.1', 'DaVinci Resolve', 'ChatGPT (prompts)', 'ElevenLabs'],
   },
   {
     id: 'monoprix',
@@ -67,7 +67,7 @@ export const cinematic = [
       'Generated the image and video scenes',
       'Managed communication and planning with the client from the first call to handover',
     ],
-    tools: ['Nano Banana Pro', 'Kling 3.0', 'DaVinci Resolve', 'ChatGPT', 'ElevenLabs'],
+    tools: ['Higgsfield', 'Nano Banana Pro', 'Kling 3.0', 'DaVinci Resolve', 'ChatGPT', 'ElevenLabs'],
   },
   {
     id: 'raiffeisenbank-hybrid',
@@ -135,7 +135,7 @@ export const cinematic = [
       'Created the static images for the one-take scene',
       'Turned the stills into the video scene',
     ],
-    tools: ['Kling 3.0'],
+    tools: ['Higgsfield', 'Kling 3.0'],
   },
   {
     id: 'kofola-phteven',
