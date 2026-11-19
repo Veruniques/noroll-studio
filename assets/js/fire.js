@@ -3,15 +3,16 @@
    `anchor`, lifts a paw and slams it down. onSlam fires on the slam (that's when the
    case unfolds). Returns cancel(); cancelling also fires onSlam, so content never stays folded. */
 
-// dog-run.webp: keyed from the green-screen render, 86 frames at 33 ms, plays once.
+// dog-run.webp: the chrome fire dog from the NO ROLL 2.0 brand (Seedance 2.5, green screen,
+// keyed), 97 frames at 35 ms, plays once: gallops, brakes, sits, raises a paw, slams it down.
 const DOG = {
-  src: new URL('../img/dog-run.webp', import.meta.url).href,
-  ratio: 606 / 400,   // width / height
-  pawX: 0.167,        // where the slamming paw lands, as a share of the image width
-  floor: 0.981,       // where the paws touch the ground, as a share of the image height
-  run: 600,           // ms the dog is still running in
-  slam: 1683,         // ms until the paw hits
-  end: 2838,          // ms, last frame (paw back down, dog settled)
+  src: new URL('../img/dog-run.webp?v=202611191905', import.meta.url).href,
+  ratio: 720 / 462,   // width / height
+  pawX: 0.315,        // where the slamming paw lands, as a share of the image width
+  floor: 0.975,       // where the paws touch the ground, as a share of the image height
+  run: 1600,          // ms the dog is still running in
+  slam: 2765,         // ms until the paw hits
+  end: 3360,          // ms, last frame (paw back down, dog settled)
 };
 
 const ease = { out: t => 1 - Math.pow(1 - t, 3) };

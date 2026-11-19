@@ -29,7 +29,7 @@ Live on `noroll.studio` since 3 Nov 2026 (replaced the old portfolio, repo `Veru
 **Open items / ideas**
 - [ ] **Contact email** `hello@noroll.studio` is a placeholder carried over from the old site. Confirm it in `assets/js/data.js` → `STUDIO.email`.
 - [ ] **Tagline** "AI cinematic production + visual design. Made right on the first roll." is in `index.html` (`.hero`). Change it if it's not dry enough.
-- [ ] **Fire dog run:** it's one still image (a leap pose) moved with a bounce, so the legs don't move. For a real gallop, get a short side-view video of this dog running on black. Key it into a sprite sheet (see "How the dog asset was made").
+- [x] **Fire dog run:** replaced with a real gallop (Seedance 2.5 on green screen, keyed): runs in, sits, slams a paw. Flames flicker the whole time.
 - [ ] Watch the dog + fire at real speed in a normal browser. It was only checked in a slow headless browser. Tune timings in `assets/js/fire.js` (below).
 - [ ] Vimeo thumbnails load live in the browser. They show as dark "▶ title" frames until they arrive or if Vimeo is blocked.
 
@@ -42,7 +42,7 @@ assets/js/data.js       ALL CONTENT — edit text, videos, images here
 assets/js/app.js        UI: works list/detail, routing, film strips, Vimeo thumbs, title click → dog
 assets/js/roll.js       the 3D scene (Three.js): roll, tape on the floor, orbit, rewind
 assets/js/fire.js       the fire dog animation + flames on the title
-assets/img/dog-run.webp   the chrome fire dog, animated, keyed from green screen (602×400, faces left, plays once)
+assets/img/dog-run.webp   the chrome fire dog, animated, keyed from green screen (720×462, faces left, plays once, 97 frames at 35 ms)
 assets/img/work/        design visuals (Fameplay, Kurník Šopa, Beyond PEAQ), ~1600 px wide JPGs
 assets/img/portrait-*.jpg  portraits (portrait-1 is printed on the tape, portrait-3 on Studio Info)
 assets/img/og.jpg       social share image

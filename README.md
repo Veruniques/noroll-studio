@@ -47,7 +47,7 @@ CINEMATIC and ABOUT are chrome lettering (Michroma with a chrome gradient).
 The title of the section you are in (CINEMATIC or ABOUT) turns orange (`--accent`).
 
 Opening a case from the site: the case arrives folded under a tab. The chrome fire dog
-(`assets/img/dog-run.webp`, keyed from a green-screen render, 86 frames, plays once) runs in from the right,
+(`assets/img/dog-run.webp`, the chrome fire dog from the NO ROLL 2.0 brand, keyed from a green-screen Seedance render, 97 frames, plays once) runs in from the right,
 sits on the tab, raises a paw and slams it down; the case unfolds on the slam. Any scroll, key or tap skips it.
 Direct visits (e.g. from Google) and reduced motion skip the dog and show the case open.
 Timings live in `DOG` at the top of `assets/js/fire.js`.
