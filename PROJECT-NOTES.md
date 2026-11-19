@@ -42,7 +42,7 @@ assets/js/data.js       ALL CONTENT — edit text, videos, images here
 assets/js/app.js        UI: works list/detail, routing, film strips, Vimeo thumbs, title click → dog
 assets/js/roll.js       the 3D scene (Three.js): roll, tape on the floor, orbit, rewind
 assets/js/fire.js       the fire dog animation + flames on the title
-assets/img/dog-run.webp   the chrome fire dog, animated, keyed from green screen (720×462, faces left, plays once, 97 frames at 35 ms)
+assets/img/dog-run.webp   the chrome fire dog, animated, keyed from green screen (960×616, from a 4K upscale, faces left, plays once, 97 frames at 35 ms)
 assets/img/work/        design visuals (Fameplay, Kurník Šopa, Beyond PEAQ), ~1600 px wide JPGs
 assets/img/portrait-*.jpg  portraits (portrait-1 is printed on the tape, portrait-3 on Studio Info)
 assets/img/og.jpg       social share image

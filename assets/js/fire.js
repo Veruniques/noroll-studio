@@ -3,11 +3,11 @@
    `anchor`, lifts a paw and slams it down. onSlam fires on the slam (that's when the
    case unfolds). Returns cancel(); cancelling also fires onSlam, so content never stays folded. */
 
-// dog-run.webp: the chrome fire dog from the NO ROLL 2.0 brand (Seedance 2.5, green screen,
+// dog-run.webp: the chrome fire dog from the NO ROLL 2.0 brand (Seedance 2.5, Topaz 4K upscale, green screen,
 // keyed), 97 frames at 35 ms, plays once: gallops, brakes, sits, raises a paw, slams it down.
 const DOG = {
-  src: new URL('../img/dog-run.webp?v=202611191905', import.meta.url).href,
-  ratio: 720 / 462,   // width / height
+  src: new URL('../img/dog-run.webp?v=202611192050', import.meta.url).href,
+  ratio: 960 / 616,   // width / height
   pawX: 0.315,        // where the slamming paw lands, as a share of the image width
   floor: 0.975,       // where the paws touch the ground, as a share of the image height
   run: 1600,          // ms the dog is still running in
@@ -44,7 +44,7 @@ export function dogStamp(anchor, { onSlam } = {}) {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) { cancel(); return cancel; }
 
   (async () => {
-    const blob = await Promise.race([preloadDog(), wait(1500).then(() => null)]);
+    const blob = await Promise.race([preloadDog(), wait(2500).then(() => null)]);
     if (cancelled) return;
     if (!blob) return cancel();
     url = URL.createObjectURL(blob);
